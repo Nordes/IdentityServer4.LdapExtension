@@ -6,7 +6,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer.LdapExtensio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer.LdapExtension.Unit", "IdentityServer.LdapExtension.Unit\IdentityServer.LdapExtension.Unit.csproj", "{FA82C863-8303-416D-9B91-967D2A919A12}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{DD7C633C-CA6A-492C-86E5-CE29364B9069}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{DD7C633C-CA6A-492C-86E5-CE29364B9069}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api", "Sample\Api\Api.csproj", "{F2C01E59-8E18-4A77-A954-0A6C13469D34}"
 EndProject
