@@ -1,19 +1,32 @@
 # IdentityServer4.LdapExtension
-IdentityServer4 Ldap Extension (OpenLdap or ActiveDirectory)
+IdentityServer4 Ldap Extension (OpenLdap or ActiveDirectory).
+
+## Table of content
+* [Nuget Package Installation](#installation)
+* [Configuration on IdentityServer4 server](#IS.BaseConfiguration)
+  * [AppSettings Configuration](#IS.AppSettings)
+* [You don't have a LDAP for your tests?](#Ldap.Test)
+* [Features in progress](#NewFeature)
+* [License](#license)
 
 ## Installation
-From the package manager prompt
+<a name="installation"/>
+
+The plugin is easy to install to your solution. Built using **.Net Standard 2.0**. The Nuget package can be installed by either searching the package `IdentityServer.LdapExtension` or by typing the following command in your package console:
 
 ```csharp
 Install-Package IdentityServer.LdapExtension
 ```
 
-### Configuration on your IdentityServer4 server
-Use the `AddLdapUsers` in order to integrate your Ldap users. Don't forget that you need to fill your configuration in your `appsettings.json`.
+## Configuration on IdentityServer4 server
+<a name="IS.BaseConfiguration"/>
+
+An easy extension method have been created in order to add the LDAP as a provider to your IdentityServer. For this you simply have to use the `AddLdapUsers<TApplicationUser>(LdapConfigSection, StoreTypeOrCustomStore)`. The configuration has to be provided or it won't work. The configuration is described [here](#IS.AppSettings).
+
+In the `Startup.cs` under `ConfigureServices` method, you will have something similar to the following by default (Starter pack for IdentityServer). The last line is what you will need to add in order to get started.
 
 ```csharp
 // ... Code ...
-
 services.AddIdentityServer()
     .AddDeveloperSigningCredential()
     //.AddSigningCredential(...)
@@ -21,47 +34,53 @@ services.AddIdentityServer()
     .AddInMemoryApiResources(Config.GetApiResources())
     .AddInMemoryClients(Config.GetClients())
     .AddLdapUsers<OpenLdapAppUser>(Configuration.GetSection("ldap"), UserStore.InMemory);
-
 // ... Code ...
 ```
 
-The `appsettings.json` could have something similar to:
+**Application User:** `2` (`OpenLdapAppUser`, `ActiveDirectoryAppUser`) have been provided with this extension, but you can use your own as long as you implement the interface `IAppUser`. I encourrage you to provide your own implementation. You might want to have claims/roles based on an active directory group or your attributes within LDAP are not the one I have defined.
+
+**Store types:**
+1. `UserStore.InMemory`: Can be used when you test locally. It stores the logged in user in memory in order to avoid querying the LDAP server over and over. It is also used in order to store the external logged in user details (Google, Facebook, etc.).
+2. `UserStore.Redis`: Same as in memory, but is persisted and will be ready when you restart.
+3. `ILdapUserStore` implementation: Build your own store implementation and pass it as a parameter.
+
+### AppSettings Configuration
+<a name="IS.AppSettings"/> 
+
+The `appsettings.json` will require a configuration for the extension. Here's an example using OpenLdap:
 
 ```json
 {
-  "ldap": {
+  "ldap": { // Name can be of your choosing
     "url": "localhost",
     "port": 389,
-    "ssl": false, // Not implemented
     "bindDn": "cn=ldap-ro,dc=contoso,dc=com",
     "bindCredentials": "P@ss1W0Rd!",
-    //// Active directory
-    //"searchBase": "cn=users,dc=contoso,dc=com",
-    //"searchFilter": "(&(objectClass=user)(objectClass=person)(sAMAccountName={0}))",
-    
-    //// OpenLdap where the uid is the userId
     "searchBase": "ou=users,DC=contoso,dc=com",
-    "searchFilter": "(&(objectClass=posixAccount)(objectClass=person)(uid={0}))",
-    "redis": "localhost:32771,ssl=false", // Need a redis server ConnectionString if Redis store 
+    "searchFilter": "(&(objectClass=posixAccount)(objectClass=person)(uid={0}))"
+    // "redis": "localhost:32771,ssl=false", // Required if using UserStore.Redis 
   }
 }
 ```
 
-Other changes are required in the default IdentityServer4 templates. You can see an implementation in the `sample` folder.
+If you want to see a working demo, you can open the implementation available the `sample` folder. It is based on the QuickStart from [IdentityServer4 WebSite](http://docs.identityserver.io/en/release/).
 
 ## You don't have a LDAP for your tests?
-Not a problem, I wrote an article in order to setup the entire OpenLdap server with Docker. That way you can play with existing users or create your own users. The page is https://nordes.github.io/#/Articles/howto-openldap-with-contoso-users.
+<a name="Ldap.Test"/>
 
-## How does it work?
-You can open the `Sample` project and see how it runs. Of course, it use a direct reference to the original project and is not using the Nuget package.
+It's not a big problem. I wrote a small tutorial/article in order to setup an entire OpenLdap server within Docker in order to not pollute your PC and also to avoid relying on network admnistrator. That way you can play with existing users or create your own users directory. The tutorial/article is available at https://nordes.github.io/#/Articles/howto-openldap-with-contoso-users.
 
-Basically, you can chose to use Redis or InMemory to store the user who are connecting/connected. It doesn't replace the database for IdentityServer, but it only act as to keep data somewhere instead of flooding the LDAP server and keep also user connecting with different OpenID provider connected. We don't necessarly want to add them in LDAP. You can create your own user implementation and your own user storage implementation.
+## Features in progress
+<a name="NewFeature"/>
 
-Also, the schema differ between `Active Directory` and `OpenLdap`, so there is 2 object type with different attributes specification in order to map the user.
-
-## New features on the road
-Since I don't have much time, the only feature that will come along for now are going to be tests and maybe different implementation for the samples in order to have all under MIT.
+I plan to work on the following:
+* Create a demo page using VueJS + Dotnet instead of Angular demo.
+* Implement the SSL
+* Implement a cache invalidation based on time (After x time without being hit, remove from redis or from memory).
 
 ## Licenses
-- MIT (For the Nuget LdapExtension)
-- IdentityServer4 Sample - Apache 2 (due to original code a bit updated)
+<a name="license"/>
+
+MIT
+
+> Regarding the IdentityServer4 Sample - Apache 2 (due to original code a bit updated)
