@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace QuickstartIdentityServer
 {
-    public class Config
+    public class InMemoryInitConfig
     {
         // scopes define the resources in your system
         public static IEnumerable<IdentityResource> GetIdentityResources()

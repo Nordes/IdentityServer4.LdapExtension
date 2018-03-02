@@ -26,10 +26,10 @@ namespace QuickstartIdentityServer
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
                 ////.AddSigningCredential(...) // Strongly recommended, if you want something more secure than developer signing (Read The Manual since it's highly recommended)
-                .AddInMemoryIdentityResources(Config.GetIdentityResources())
-                .AddInMemoryApiResources(Config.GetApiResources())
-                .AddInMemoryClients(Config.GetClients())
-                .AddLdapUsers<OpenLdapAppUser>(Configuration.GetSection("ldap"), UserStore.InMemory);
+                .AddInMemoryIdentityResources(InMemoryInitConfig.GetIdentityResources())
+                .AddInMemoryApiResources(InMemoryInitConfig.GetApiResources())
+                .AddInMemoryClients(InMemoryInitConfig.GetClients())
+                .AddLdapUsers<OpenLdapAppUser>(Configuration.GetSection("ldapOpenLdap"), UserStore.InMemory);
         }
 
         public void Configure(IApplicationBuilder app)
