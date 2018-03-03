@@ -42,7 +42,6 @@ namespace IdentityServer4.Quickstart.UI
             IEventService events,
             ILdapUserStore userStore)
         {
-            // if the TestUserStore is not in DI, then we'll just use the global users collection
             _interaction = interaction;
             _events = events;
             _userStore = userStore;

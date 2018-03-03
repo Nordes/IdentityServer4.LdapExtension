@@ -24,7 +24,7 @@ namespace IdentityServer.LdapExtension.UserModel
         /// <summary>
         /// Fill the user claims based on the ldapEntry
         /// </summary>
-        /// <param name="ldapEntry"></param>
+        /// <param name="ldapEntry">The LDAP entry.</param>
         void FillClaims(LdapEntry ldapEntry);
 
         /// <summary>

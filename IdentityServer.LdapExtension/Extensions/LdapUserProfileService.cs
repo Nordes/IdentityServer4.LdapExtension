@@ -12,23 +12,25 @@ namespace IdentityServer.LdapExtension.Extensions
     public class LdapUserProfileService<TUser>: IProfileService
         where TUser : IAppUser, new()
     {
-        /// <summary>
-        /// The logger
-        /// </summary>
         protected readonly ILogger Logger;
-
-        /// <summary>
-        /// The users
-        /// </summary>
         protected readonly ILdapUserStore Users;
 
-        //public LdapUserProfileService(ILdapAuthenticationService authenticationService, ILogger<LdapUserProfileService<TUser>> logger)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LdapUserProfileService{TUser}"/> class.
+        /// </summary>
+        /// <param name="users">The users.</param>
+        /// <param name="logger">The logger.</param>
         public LdapUserProfileService(ILdapUserStore users, ILogger<LdapUserProfileService<TUser>> logger)
         {
             Users = users;
             Logger = logger;
         }
 
+        /// <summary>
+        /// This method is called whenever claims about the user are requested (e.g. during token creation or via the userinfo endpoint)
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>Returns nothing, but update the current claims to the context.</returns>
         public Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
             context.LogProfileRequest(Logger);
@@ -49,6 +51,12 @@ namespace IdentityServer.LdapExtension.Extensions
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// This method gets called whenever identity server needs to determine if the user is valid or active (e.g. if the user's account has been deactivated since they logged in).
+        /// (e.g. during token issuance or validation).
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns></returns>
         public Task IsActiveAsync(IsActiveContext context)
         {
             Logger.LogDebug("IsActive called from: {caller}", context.Caller);

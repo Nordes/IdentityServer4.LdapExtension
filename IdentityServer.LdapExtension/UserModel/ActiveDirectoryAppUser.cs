@@ -38,6 +38,10 @@ namespace IdentityServer.LdapExtension.UserModel
 
         public string[] LdapAttributes => Enum<ActiveDirectoryLdapAttributes>.Descriptions;
 
+        /// <summary>
+        /// Fills the claims.
+        /// </summary>
+        /// <param name="user">The user.</param>
         public void FillClaims(LdapEntry user)
         {
             // Example in LDAP we have display name as displayName (normal field)
@@ -77,11 +81,23 @@ namespace IdentityServer.LdapExtension.UserModel
 
         }
 
+        /// <summary>
+        /// Requesteds the LDAP attributes.
+        /// </summary>
+        /// <returns>Returns a special/requested ldap attribute.</returns>
+        /// <exception cref="NotImplementedException"></exception>
         public static string[] RequestedLdapAttributes()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Gets the claim from LDAP attributes.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="claim">The claim.</param>
+        /// <param name="ldapAttribute">The LDAP attribute.</param>
+        /// <returns>Returns the claim.</returns>
         internal Claim GetClaimFromLdapAttributes(LdapEntry user, string claim, ActiveDirectoryLdapAttributes ldapAttribute)
         {
             string value = string.Empty;
@@ -98,6 +114,17 @@ namespace IdentityServer.LdapExtension.UserModel
             return new Claim(claim, value); // Return an empty claim
         }
 
+        /// <summary>
+        /// This will set the base details such as:
+        /// - DisplayName
+        /// - Username
+        /// - ProviderName
+        /// - SubjectId
+        /// - ProviderSubjectId
+        /// - Fill the claims
+        /// </summary>
+        /// <param name="ldapEntry">Ldap Entry</param>
+        /// <param name="providerName">Specific provider such as Google, Facebook, etc.</param>
         public void SetBaseDetails(LdapEntry ldapEntry, string providerName)
         {
             DisplayName = ldapEntry.getAttribute(ActiveDirectoryLdapAttributes.DisplayName.ToDescriptionString()).StringValue;

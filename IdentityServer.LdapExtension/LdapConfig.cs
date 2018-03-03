@@ -1,6 +1,4 @@
-﻿using IdentityServer.LdapExtension.UserModel;
-
-/// <summary>
+﻿/// <summary>
 /// Configuration section that can be serialized from the AppSettings configuration.
 /// </summary>
 namespace IdentityServer.LdapExtension
@@ -18,11 +16,10 @@ namespace IdentityServer.LdapExtension
         public int RefreshClaimsInSeconds { get; set; }
 
         /// <summary>
-        /// Gets or sets the extra attributes. These extra attributes are the one from LDAP not part of the enum <see cref="LdapAttributes"/>.
+        /// Gets or sets the extra attributes. These extra attributes
+        /// are the one from LDAP not part of the enum <see cref="LdapAttributes"/>.
         /// </summary>
-        /// <value>
-        /// The extra ldapAttributes.
-        /// </value>
+        /// <remarks>Not being used in current implementation.</remarks>
         public string[] ExtraAttributes { get; set; }
     }
 }

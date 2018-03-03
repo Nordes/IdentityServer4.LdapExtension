@@ -15,6 +15,10 @@ namespace IdentityServer.LdapExtension.UserStore
         private readonly ILdapService<TUser> _authenticationService;
         private readonly Dictionary<string, Dictionary<string, TUser>> _users = new Dictionary<string, Dictionary<string, TUser>>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InMemoryUserStore{TUser}"/> class.
+        /// </summary>
+        /// <param name="authenticationService">The authentication service.</param>
         public InMemoryUserStore(ILdapService<TUser> authenticationService)
         {
             _authenticationService = authenticationService;
@@ -25,7 +29,10 @@ namespace IdentityServer.LdapExtension.UserStore
         /// </summary>
         /// <param name="username">The username.</param>
         /// <param name="password">The password.</param>
-        /// <returns></returns>
+        /// <returns>
+        /// Returns the application user that match that account if the
+        /// authentication is successful.
+        /// </returns>
         public IAppUser ValidateCredentials(string username, string password)
         {
             try
@@ -67,6 +74,13 @@ namespace IdentityServer.LdapExtension.UserStore
             return _authenticationService.FindUser(subjectId.Replace("ldap_", ""));
         }
 
+        /// <summary>
+        /// Finds by username.
+        /// </summary>
+        /// <param name="username">The username that we are want to find.</param>
+        /// <returns>
+        /// Returns the application user that match the requested username.
+        /// </returns>
         public IAppUser FindByUsername(string username)
         {
             // Check the external data provider
@@ -81,11 +95,13 @@ namespace IdentityServer.LdapExtension.UserStore
         }
 
         /// <summary>
-        /// Finds the user by external provider.
+        /// Finds the by external provider.
         /// </summary>
-        /// <param name="provider">The provider.</param>
-        /// <param name="userId">The user identifier.</param>
-        /// <returns></returns>
+        /// <param name="provider">The OpenId/specific provider.</param>
+        /// <param name="userId">The user identifier to search within the specified provider.</param>
+        /// <returns>
+        /// Returns the application user that match the requested username and provider.
+        /// </returns>
         public IAppUser FindByExternalProvider(string provider, string userId)
         {
             if (_users.TryGetValue(provider, out var providerUsers))
@@ -100,12 +116,16 @@ namespace IdentityServer.LdapExtension.UserStore
         }
 
         /// <summary>
-        /// Automatically provisions a user.
+        /// Provisions users automatically. By example if login using Google, we want to handle how
+        /// we will add it in our LDAP extension. You could add the user to your own LDAP or add it
+        /// to a different store (Redis, InMemory, SQL, ...).
         /// </summary>
-        /// <param name="provider">The provider.</param>
-        /// <param name="userId">The user identifier.</param>
-        /// <param name="claims">The claims.</param>
-        /// <returns></returns>
+        /// <param name="provider">The provider that require to provision in the system.</param>
+        /// <param name="userId">The user identifier from that provider.</param>
+        /// <param name="claims">The claims related to that provider.</param>
+        /// <returns>
+        /// Returns the application users created.
+        /// </returns>
         public IAppUser AutoProvisionUser(string provider, string userId, List<Claim> claims)
         {
             // create a list of claims that we want to transfer into our store

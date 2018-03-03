@@ -14,14 +14,23 @@ namespace IdentityServer.LdapExtension.Extensions
         private readonly ILdapUserStore _users;
         private readonly ISystemClock _clock;
 
-        //public LdapUserResourceOwnerPasswordValidator(ILdapAuthenticationService authenticationService, ISystemClock clock)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LdapUserResourceOwnerPasswordValidator{TUser}"/> class.
+        /// </summary>
+        /// <param name="users">The users.</param>
+        /// <param name="clock">The clock.</param>
         public LdapUserResourceOwnerPasswordValidator(ILdapUserStore users, ISystemClock clock)
         {
-            //_users = new LdapUserStore(authenticationService);
             _users = users;
             _clock = clock;
         }
 
+        /// <summary>
+        /// Validates the resource owner password credential
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>Returns nothing, but update the context.</returns>
+        /// <exception cref="ArgumentException">Subject ID not set - SubjectId</exception>
         public Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
             var user = _users.ValidateCredentials(context.UserName, context.Password);

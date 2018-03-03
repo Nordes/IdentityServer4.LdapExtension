@@ -38,6 +38,10 @@ namespace IdentityServer.LdapExtension.UserModel
 
         public string[] LdapAttributes => Enum<OpenLdapAttributes>.Descriptions;
 
+        /// <summary>
+        /// Fills the claims.
+        /// </summary>
+        /// <param name="user">The user.</param>
         public void FillClaims(LdapEntry user)
         {
             // Example in LDAP we have display name as displayName (normal field)

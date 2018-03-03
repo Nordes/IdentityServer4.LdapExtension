@@ -10,6 +10,10 @@ namespace IdentityServer.LdapExtension.Extensions
     /// <typeparam name="T"> type of Enum </typeparam>
     internal class Enum<T> where T : struct, IConvertible
     {
+        /// <summary>
+        /// Gets the descriptions attribute from an Enum (all of them at once).
+        /// </summary>
+        /// <exception cref="ArgumentException">T must be an enumerated type</exception>
         public static string[] Descriptions
         {
             get

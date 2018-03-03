@@ -8,15 +8,20 @@ using Novell.Directory.Ldap;
 namespace IdentityServer.LdapExtension
 {
     /// <summary>
-    /// This is the service that is used to contact the Ldap.
+    /// This is an implementation of the service that is used to contact Ldap.
     /// </summary>
     public class LdapService<TUser> : ILdapService<TUser>
-        where TUser: IAppUser, new()
+        where TUser : IAppUser, new()
     {
         private readonly ILogger<LdapService<TUser>> _logger;
         private readonly LdapConfig _config;
         private readonly LdapConnection _ldapConnection;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LdapService{TUser}"/> class.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
+        /// <param name="logger">The logger.</param>
         public LdapService(IOptions<LdapConfig> config, ILogger<LdapService<TUser>> logger)
         {
             _logger = logger;
@@ -28,16 +33,34 @@ namespace IdentityServer.LdapExtension
             };
         }
 
+        private int LdapPort
+        {
+            get
+            {
+                if (_config.Port == 0)
+                {
+                    return _config.Ssl ? LdapConnection.DEFAULT_SSL_PORT : LdapConnection.DEFAULT_PORT;
+                }
+
+                return _config.Port;
+            }
+        }
+
         /// <summary>
-        /// Attempt to login through Ldap.
+        /// Logins using the specified credentials.
         /// </summary>
-        /// <param name="username">Ldap username</param>
-        /// <param name="password">Ldap password</param>
-        /// <returns>User details.</returns>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>
+        /// Returns the logged in user.
+        /// </returns>
+        /// <exception cref="LoginFailedException">Login failed.</exception>
         public TUser Login(string username, string password)
         {
             var searchResult = SearchUser(username);
-            if (searchResult.hasMore()) {
+
+            if (searchResult.hasMore())
+            {
                 try
                 {
                     var user = searchResult.next();
@@ -46,9 +69,8 @@ namespace IdentityServer.LdapExtension
                         _ldapConnection.Bind(user.DN, password);
                         if (_ldapConnection.Bound)
                         {
-                            // Here it cause some kind of issue.
                             var appUser = new TUser();
-                            appUser.SetBaseDetails(user, "local"); // Could be also ldap.
+                            appUser.SetBaseDetails(user, "local"); // Should we change to LDAP.
                             _ldapConnection.Disconnect();
 
                             return appUser;
@@ -68,6 +90,13 @@ namespace IdentityServer.LdapExtension
             return default(TUser);
         }
 
+        /// <summary>
+        /// Finds user by username.
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <returns>
+        /// Returns the user when it exists.
+        /// </returns>
         public TUser FindUser(string username)
         {
             var searchResult = SearchUser(username);
@@ -99,11 +128,9 @@ namespace IdentityServer.LdapExtension
 
         private LdapSearchResults SearchUser(string username)
         {
-            var port = _config.Port == 0 ? _config.Ssl ? LdapConnection.DEFAULT_SSL_PORT : LdapConnection.DEFAULT_PORT : _config.Port;
-
-            _ldapConnection.Connect(_config.Url, port);
+            _ldapConnection.Connect(_config.Url, LdapPort);
             _ldapConnection.Bind(_config.BindDn, _config.BindCredentials);
-            var attributes = (new TUser()).LdapAttributes; // TODO change this code, this is totally a hack. It's bad coding!
+            var attributes = (new TUser()).LdapAttributes;
             var searchFilter = string.Format(_config.SearchFilter, username);
             var result = _ldapConnection.Search(
                 _config.SearchBase,
