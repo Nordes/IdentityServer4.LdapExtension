@@ -1,3 +1,6 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/k26pepb32vka29w2/branch/master?svg=true)](https://ci.appveyor.com/project/Nordes/identityserver4-ldapextension/branch/master)
+
+
 # IdentityServer4.LdapExtension
 IdentityServer4 Ldap Extension (OpenLdap or ActiveDirectory).
 
