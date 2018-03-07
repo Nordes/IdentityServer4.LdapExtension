@@ -81,6 +81,30 @@ namespace QuickstartIdentityServer
                         "api1"
                     },
                     AllowOfflineAccess = true
+                },
+
+                // OpenID Connect implicit flow client (MVC with vue js)
+                new Client
+                {
+                    ClientId = "mvcvue",
+                    ClientName = "MVC VueJS Client",
+                    AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
+
+                    ClientSecrets =
+                    {
+                        new Secret("secret".Sha256())
+                    },
+
+                    RedirectUris = { "http://localhost:5006/signin-oidc" },
+                    PostLogoutRedirectUris = { "http://localhost:5006/signout-callback-oidc" },
+
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "api1"
+                    },
+                    AllowOfflineAccess = true
                 }
             };
         }

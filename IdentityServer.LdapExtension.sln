@@ -14,6 +14,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcClient", "Sample\Client\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickstartIdentityServer", "Sample\IdentityServer\QuickstartIdentityServer.csproj", "{88621EEF-2988-40C1-92E2-3C6B0697FBC7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcVueClient", "MvcVueClient\MvcVueClient.csproj", "{5F7028A1-FE2B-4FB0-9025-A995DF948704}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +86,18 @@ Global
 		{88621EEF-2988-40C1-92E2-3C6B0697FBC7}.Release|x64.Build.0 = Release|Any CPU
 		{88621EEF-2988-40C1-92E2-3C6B0697FBC7}.Release|x86.ActiveCfg = Release|Any CPU
 		{88621EEF-2988-40C1-92E2-3C6B0697FBC7}.Release|x86.Build.0 = Release|Any CPU
+		{5F7028A1-FE2B-4FB0-9025-A995DF948704}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F7028A1-FE2B-4FB0-9025-A995DF948704}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F7028A1-FE2B-4FB0-9025-A995DF948704}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5F7028A1-FE2B-4FB0-9025-A995DF948704}.Debug|x64.Build.0 = Debug|Any CPU
+		{5F7028A1-FE2B-4FB0-9025-A995DF948704}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5F7028A1-FE2B-4FB0-9025-A995DF948704}.Debug|x86.Build.0 = Debug|Any CPU
+		{5F7028A1-FE2B-4FB0-9025-A995DF948704}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F7028A1-FE2B-4FB0-9025-A995DF948704}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F7028A1-FE2B-4FB0-9025-A995DF948704}.Release|x64.ActiveCfg = Release|Any CPU
+		{5F7028A1-FE2B-4FB0-9025-A995DF948704}.Release|x64.Build.0 = Release|Any CPU
+		{5F7028A1-FE2B-4FB0-9025-A995DF948704}.Release|x86.ActiveCfg = Release|Any CPU
+		{5F7028A1-FE2B-4FB0-9025-A995DF948704}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,6 +106,7 @@ Global
 		{F2C01E59-8E18-4A77-A954-0A6C13469D34} = {DD7C633C-CA6A-492C-86E5-CE29364B9069}
 		{B220EF6C-ADB2-40F9-9AFD-31B7F6B34CB5} = {DD7C633C-CA6A-492C-86E5-CE29364B9069}
 		{88621EEF-2988-40C1-92E2-3C6B0697FBC7} = {DD7C633C-CA6A-492C-86E5-CE29364B9069}
+		{5F7028A1-FE2B-4FB0-9025-A995DF948704} = {DD7C633C-CA6A-492C-86E5-CE29364B9069}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {21CD9FE1-C93F-4EB9-9111-AF1C5B33CBA6}
