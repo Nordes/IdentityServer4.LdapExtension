@@ -11,6 +11,8 @@ Vue.component('icon', FontAwesomeIcon)
 
 Vue.prototype.$http = axios
 
+store.dispatch('loginCheck')
+
 sync(store, router)
 
 const app = new Vue({

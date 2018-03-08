@@ -1,12 +1,30 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import { routes } from './routes'
+import Store from '../store/index'
 
 Vue.use(VueRouter)
 
-let router = new VueRouter({
+const router = new VueRouter({
   mode: 'history',
   routes
+})
+
+router.beforeResolve((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // // Get the auth details
+    if (!Store.getters.isLoggedIn) {
+      console.log('Not authorized. Please sign-in before accessing this page.')
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      })
+    } else {
+      next()
+    }
+  } else {
+    next() // make sure to always call next()!
+  }
 })
 
 export default router

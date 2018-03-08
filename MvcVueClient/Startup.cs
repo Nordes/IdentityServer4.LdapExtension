@@ -5,6 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace MvcVueClient
 {
@@ -40,7 +41,7 @@ namespace MvcVueClient
                         options.DefaultScheme = "Cookies";
                         options.DefaultChallengeScheme = "oidc";
                     })
-                .AddCookie("Cookies")
+                .AddCookie("Cookies") // https://stackoverflow.com/questions/38800919/how-to-return-401-instead-of-302-in-asp-net-core/45271981#45271981
                 .AddOpenIdConnect("oidc", options =>
                 {
                     options.SignInScheme = "Cookies";
@@ -55,8 +56,16 @@ namespace MvcVueClient
                     options.SaveTokens = true;
                     options.GetClaimsFromUserInfoEndpoint = true;
                     options.Scope.Add("offline_access");
-                    options.SaveTokens = true;
                 });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Events.OnRedirectToLogin = context =>
+                {
+                    context.Response.StatusCode = 401;
+                    return Task.CompletedTask;
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

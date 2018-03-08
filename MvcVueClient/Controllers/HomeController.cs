@@ -22,10 +22,10 @@ namespace MvcVueClient.Controllers
         public IActionResult Login()
         {
             // Redirect to profile
-            // Send back details to say he's authenticated...
-            return Ok();
+            return RedirectToAction("Index");
         }
 
+        [Route("/logout")]
         public async Task Logout()
         {
             await HttpContext.SignOutAsync("Cookies");

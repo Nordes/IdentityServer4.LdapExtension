@@ -1,7 +1,7 @@
 import fontawesome from '@fortawesome/fontawesome'
 // Official documentation available at: https://github.com/FortAwesome/vue-fontawesome
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-import { faEnvelope, faHome, faGraduationCap, faList, faSpinner } from '@fortawesome/fontawesome-free-solid'
+import { faUserCircle, faSignInAlt, faEnvelope, faHome, faGraduationCap, faList, faSpinner } from '@fortawesome/fontawesome-free-solid'
 import { faMicrosoft, faVuejs, faFontAwesome } from '@fortawesome/fontawesome-free-brands'
 
 // If not present, it won't be visible within the application. Considering that you
@@ -13,6 +13,8 @@ fontawesome.library.add(
   faHome,
   faList,
   faSpinner,
+  faSignInAlt,
+  faUserCircle,
   // Brands
   faFontAwesome,
   faMicrosoft,
