@@ -17,8 +17,8 @@ namespace MvcVueClient.Controllers
         /// </summary>
         /// <returns>Returns the user claims</returns>
         [HttpGet]
-        [Route("[action]")]
         [Authorize]
+        [Route("[action]")]
         public IActionResult Current()
         {
             return new JsonResult(

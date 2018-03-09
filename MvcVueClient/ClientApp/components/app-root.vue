@@ -10,6 +10,8 @@
         <nav-menu params="route: route"></nav-menu>
       </div>
       <div class="col-sm-9">
+        <h1>{{$route.meta.display}}</h1>
+        <hr/>
         <router-view></router-view>
       </div>
     </div>

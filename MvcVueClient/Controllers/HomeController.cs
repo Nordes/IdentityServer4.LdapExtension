@@ -17,12 +17,24 @@ namespace MvcVueClient.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Logins the specified redirect.
+        /// </summary>
+        /// <param name="redirect">The redirect.</param>
+        /// <returns></returns>
         [Route("/login")]
         [Authorize]
-        public IActionResult Login()
+        public IActionResult Login([FromQuery()] string redirect = "")
         {
-            // Redirect to profile
-            return RedirectToAction("Index");
+            if (string.IsNullOrEmpty(redirect))
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                // Redirect to profile by example
+                return Redirect(redirect);
+            }
         }
 
         [Route("/logout")]

@@ -39,8 +39,10 @@ module.exports = () => {
       }),
       new webpack.ProvidePlugin({
         $: 'jquery',
+        jquery: 'jquery',
+        'window.jQuery': 'jquery',
         jQuery: 'jquery',
-        Popper: ['popper.js', 'default']
+        'Tether': 'tether'
       }), // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
       new webpack.DllPlugin({
         path: path.join(__dirname, 'wwwroot', 'dist', '[name]-manifest.json'),

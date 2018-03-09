@@ -5,7 +5,7 @@ const bundleOutputDir = './wwwroot/dist'
 
 module.exports = () => {
   console.log('Building for \x1b[33m%s\x1b[0m', process.env.NODE_ENV)
-
+  // we should clean the dist folder.
   const isDevBuild = !(process.env.NODE_ENV && process.env.NODE_ENV === 'production')
 
   return [{
@@ -13,8 +13,13 @@ module.exports = () => {
     entry: { 'main': './ClientApp/boot-app.js' },
     resolve: {
       extensions: ['.js', '.vue'],
-      alias: {
+      alias: isDevBuild ? {
         'vue$': 'vue/dist/vue',
+        'components': path.resolve(__dirname, './ClientApp/components'),
+        'views': path.resolve(__dirname, './ClientApp/views'),
+        'utils': path.resolve(__dirname, './ClientApp/utils'),
+        'api': path.resolve(__dirname, './ClientApp/store/api')
+      } : {
         'components': path.resolve(__dirname, './ClientApp/components'),
         'views': path.resolve(__dirname, './ClientApp/views'),
         'utils': path.resolve(__dirname, './ClientApp/utils'),

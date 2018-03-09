@@ -1,6 +1,6 @@
 ﻿<template>
     <div>
-        <h1>Weather forecast</h1>
+        <h3>Weather forecast</h3>
 
         <p>This component demonstrates fetching data from the server.</p>
 
@@ -10,17 +10,17 @@
         </div>
 
         <template v-if="forecasts">
-            <table class="table">
-                <thead  class="bg-dark text-white">
+            <table class="table table-light table-striped">
+                <thead class="thead-dark">
                     <tr>
-                        <th>Date</th>
-                        <th>Temp. (C)</th>
-                        <th>Temp. (F)</th>
-                        <th>Summary</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Temp. (C)</th>
+                        <th scope="col">Temp. (F)</th>
+                        <th scope="col">Summary</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr :class="index % 2 == 0 ? 'bg-white' : 'bg-light'" v-for="(forecast, index) in forecasts" :key="index">
+                    <tr v-for="(forecast, index) in forecasts" :key="index">
                         <td>{{ forecast.dateFormatted }}</td>
                         <td>{{ forecast.temperatureC }}</td>
                         <td>{{ forecast.temperatureF }}</td>

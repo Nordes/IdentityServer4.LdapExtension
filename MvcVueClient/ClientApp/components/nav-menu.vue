@@ -10,9 +10,9 @@
             <router-link class="navbar-brand" to="/">
               <icon :icon="['fab', 'microsoft']"/> ASP.NET Core with Vue.js 2
             </router-link>
-            <h6 class="text-white" v-if="$store.getters.isLoggedIn">
+            <h6 class="text-white" v-if="isLoggedIn">
               <small>
-                {{$store.getters.user.name}}!
+                {{user.name}}
                 <a class="text-white pl-3" href="/logout"><icon icon="sign-in-alt" flip="horizontal" class="mr-2" /><span>Sign-Out</span></a>
               </small>
             </h6>
@@ -24,7 +24,7 @@
                                 <icon :icon="route.meta.icon" class="mr-2" /><span>{{ route.meta.display }}</span> 
                             </router-link>
                         </li>
-                        <li class="nav-item" v-if="!$store.getters.isLoggedIn">
+                        <li class="nav-item" v-if="!isLoggedIn">
                             <a href="/login"><icon icon="sign-in-alt" class="mr-2" /><span>Sign-In</span></a>
                         </li>
                     </ul>
@@ -36,12 +36,19 @@
 
 <script>
 import { routes } from "../router/routes";
+import { mapGetters } from 'vuex'
 
 export default {
   computed: {
+    ...mapGetters({
+      isLoggedIn: 'isLoggedIn',
+      user: 'user'
+    }),
+
     availableRoutes: function () {
       // If not authenticated.
-      return this.routes.filter(f=> !f.meta.requireAuth)
+      console.log(this.routes.filter(f=> !f.meta.requiresAuth))
+      return this.routes.filter(f=> this.isLoggedIn || !f.meta.requiresAuth)
     }
   },
   data() {

@@ -11,20 +11,24 @@ const router = new VueRouter({
 })
 
 router.beforeResolve((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    // // Get the auth details
-    if (!Store.getters.isLoggedIn) {
-      console.log('Not authorized. Please sign-in before accessing this page.')
-      next({
-        path: '/login',
-        query: { redirect: to.fullPath }
-      })
+  function checkAuth () {
+    if (Store.getters.isLoginPending) {
+      setTimeout(checkAuth, 100)
     } else {
-      next()
+      if (to.matched.some(record => record.meta.requiresAuth)) {
+        // // Get the auth details
+        if (!Store.getters.isLoggedIn) {
+          window.location = `/login?redirect=${to.fullPath}`
+        } else {
+          next()
+        }
+      } else {
+        next() // make sure to always call next()!
+      }
     }
-  } else {
-    next() // make sure to always call next()!
   }
+
+  checkAuth()
 })
 
 export default router
