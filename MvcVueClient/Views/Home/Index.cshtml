@@ -1,7 +1,11 @@
 @{ ViewData["Title"] = "Home Page"; }
-
 <div id="app"></div>
-
 @section scripts {
+    @if (User.Identity.IsAuthenticated)
+    {
+        <script asp-append-version="true">
+            var isAuthenticated = true
+        </script>
+    }
     <script src="~/dist/main.js" asp-append-version="true"></script>
 }

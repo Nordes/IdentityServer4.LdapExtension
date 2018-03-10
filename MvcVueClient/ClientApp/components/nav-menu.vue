@@ -46,8 +46,6 @@ export default {
     }),
 
     availableRoutes: function () {
-      // If not authenticated.
-      console.log(this.routes.filter(f=> !f.meta.requiresAuth))
       return this.routes.filter(f=> this.isLoggedIn || !f.meta.requiresAuth)
     }
   },

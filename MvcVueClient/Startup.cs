@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using System.Net;
 
 namespace MvcVueClient
 {
@@ -41,7 +43,7 @@ namespace MvcVueClient
                         options.DefaultScheme = "Cookies";
                         options.DefaultChallengeScheme = "oidc";
                     })
-                .AddCookie("Cookies") // https://stackoverflow.com/questions/38800919/how-to-return-401-instead-of-302-in-asp-net-core/45271981#45271981
+                .AddCookie("Cookies")
                 .AddOpenIdConnect("oidc", options =>
                 {
                     options.SignInScheme = "Cookies";
@@ -56,16 +58,19 @@ namespace MvcVueClient
                     options.SaveTokens = true;
                     options.GetClaimsFromUserInfoEndpoint = true;
                     options.Scope.Add("offline_access");
-                });
 
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.Events.OnRedirectToLogin = context =>
-                {
-                    context.Response.StatusCode = 401;
-                    return Task.CompletedTask;
-                };
-            });
+                    options.Events.OnRedirectToIdentityProvider = context =>
+                    {
+                        // Instead of doing a login-redirect, we send back a Unauthorized.
+                        if (context.Request.Path.StartsWithSegments(new PathString("/api"))) { 
+                            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                            context.HandleResponse();
+                        }
+
+                        return Task.CompletedTask;
+                    };
+
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -90,9 +95,7 @@ namespace MvcVueClient
             }
 
             app.UseAuthentication();
-
             app.UseStaticFiles();
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

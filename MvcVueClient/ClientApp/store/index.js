@@ -59,6 +59,11 @@ const actions = ({
     // Todo: Keep a check for the login, we should do a call
     // frequently and kick the user out. We already have the router doing that, but
     // I would prefer to kick out in case the person stay idle.
+    if (!window.isAuthenticated) {
+      // Small hack in Asp.Net. But basically if the user even try, he will get a
+      // 401 and then the user will not be logged anyway
+      return commit(USER_NOT_LOGGED_IN)
+    }
     try {
       var response = await axios.get('api/user/current')
     } catch (e) {
