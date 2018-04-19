@@ -29,7 +29,7 @@ namespace IdentityServer.LdapExtension
 
             _ldapConnection = new LdapConnection
             {
-                SecureSocketLayer = false
+                SecureSocketLayer = _config.Ssl
             };
         }
 
