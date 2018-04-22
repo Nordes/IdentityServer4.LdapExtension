@@ -81,6 +81,12 @@ I plan to work on the following:
 * Implement the SSL
 * Implement a cache invalidation based on time (After x time without being hit, remove from redis or from memory).
 
+## Contributors
+* Me, the author of the package (@Nordes)
+
+### Thanks to:
+* @marianahycit
+
 ## Licenses
 <a name="license"/>
 
