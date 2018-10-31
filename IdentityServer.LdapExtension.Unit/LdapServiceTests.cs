@@ -4,6 +4,7 @@ using Xunit;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
 using IdentityServer.LdapExtension.DirectoryServices;
+using System.Collections.Generic;
 
 namespace IdentityServer.LdapExtension.Sample
 {
@@ -14,13 +15,20 @@ namespace IdentityServer.LdapExtension.Sample
         /// </summary>
         private readonly LdapConfig _ldapConfig = new LdapConfig
         {
-            Url = "localhost",
-            BindDn = "cn=ldap-ro,dc=contoso,dc=com",
-            BindCredentials = "P@ss1W0Rd!",
-            SearchBase = "ou=users,DC=contoso,dc=com",
-            SearchFilter = "(&(objectClass=posixAccount)(objectClass=person)(uid={0}))",
-            Ssl = false,
-            Port = 389
+            Hosts = new HashSet<LdapHost>()
+            {
+                new LdapHost {
+                    Name= "default",
+                    Url = "localhost",
+                    BindDn = "cn=ldap-ro,dc=contoso,dc=com",
+                    BindCredentials = "P@ss1W0Rd!",
+                    SearchBase = "ou=users,DC=contoso,dc=com",
+                    SearchFilter = "(&(objectClass=posixAccount)(objectClass=person)(uid={0}))",
+                    Ssl = false,
+                    Port = 389
+
+                }
+            }
         };
 
         private readonly Mock<IOptions<LdapConfig>> _ldapConfigMock;

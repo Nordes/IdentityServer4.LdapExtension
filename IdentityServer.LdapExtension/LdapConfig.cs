@@ -1,12 +1,19 @@
-﻿/// <summary>
+﻿using Novell.Directory.Ldap;
+using System.Collections.Generic;
+/// <summary>
 /// Configuration section that can be serialized from the AppSettings configuration.
 /// </summary>
 namespace IdentityServer.LdapExtension
 {
     public class LdapConfig
     {
+        public ICollection<LdapHost> Hosts { get; set; }
+    }
+    public class LdapHost
+    {
+        public string Name { get; set; }
         public string Url { get; set; }
-        public int Port { get; set; }
+        public int Port { get; set; } = LdapConnection.DEFAULT_PORT;
         public bool Ssl { get; set; }
         public string BindDn { get; set; }
         public string BindCredentials { get; set; }
@@ -21,5 +28,6 @@ namespace IdentityServer.LdapExtension
         /// </summary>
         /// <remarks>Not being used in current implementation.</remarks>
         public string[] ExtraAttributes { get; set; }
+
     }
 }

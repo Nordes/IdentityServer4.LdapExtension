@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using IdentityServer.LdapExtension.Exceptions;
 using IdentityServer.LdapExtension.UserModel;
 using Microsoft.Extensions.Logging;
@@ -26,24 +27,8 @@ namespace IdentityServer.LdapExtension
         {
             _logger = logger;
             _config = config.Value;
+            _ldapConnection = new LdapConnection();
 
-            _ldapConnection = new LdapConnection
-            {
-                SecureSocketLayer = _config.Ssl
-            };
-        }
-
-        private int LdapPort
-        {
-            get
-            {
-                if (_config.Port == 0)
-                {
-                    return _config.Ssl ? LdapConnection.DEFAULT_SSL_PORT : LdapConnection.DEFAULT_PORT;
-                }
-
-                return _config.Port;
-            }
         }
 
         /// <summary>
@@ -88,8 +73,52 @@ namespace IdentityServer.LdapExtension
             _ldapConnection.Disconnect();
 
             return default(TUser);
-        }
 
+        }
+        /// <summary>
+        /// Logins using the specified credentials.
+        /// </summary>
+        /// <param name="domain">The domain name to authenticate against</param>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>
+        /// Returns the logged in user.
+        /// </returns>
+        /// <exception cref="LoginFailedException">Login failed.</exception>
+        public TUser Login(string domain, string username, string password)
+        {
+            var searchResult = SearchUser(domain, username);
+
+            if (searchResult.hasMore())
+            {
+                try
+                {
+                    var user = searchResult.next();
+                    if (user != null)
+                    {
+                        _ldapConnection.Bind(user.DN, password);
+                        if (_ldapConnection.Bound)
+                        {
+                            var appUser = new TUser();
+                            appUser.SetBaseDetails(user, domain);
+                            _ldapConnection.Disconnect();
+
+                            return appUser;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    _logger.LogTrace(e.Message);
+                    _logger.LogTrace(e.StackTrace);
+                    throw new LoginFailedException("Login failed.", e);
+                }
+            }
+
+            _ldapConnection.Disconnect();
+
+            return default(TUser);
+        }
         /// <summary>
         /// Finds user by username.
         /// </summary>
@@ -99,6 +128,7 @@ namespace IdentityServer.LdapExtension
         /// </returns>
         public TUser FindUser(string username)
         {
+
             var searchResult = SearchUser(username);
 
             try
@@ -125,15 +155,68 @@ namespace IdentityServer.LdapExtension
 
             return default(TUser);
         }
+        /// <summary>
+        /// Finds user by username.
+        /// </summary>
+        /// <param name="domain">The domain name to authenticate against</param>
+        /// <param name="username">The username.</param>
+        /// <returns>
+        /// Returns the user when it exists.
+        /// </returns>
+        public TUser FindUser(string domain, string username)
+        {
+            
+            var searchResult = SearchUser(domain, username);
 
+            try
+            {
+                var user = searchResult.next();
+                if (user != null)
+                {
+                    var appUser = new TUser();
+                    appUser.SetBaseDetails(user, "local");
+
+                    _ldapConnection.Disconnect();
+
+                    return appUser;
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogTrace(e.Message);
+                _logger.LogTrace(e.StackTrace);
+                // Swallow the exception since we don't expect an error from this method.
+            }
+
+            _ldapConnection.Disconnect();
+
+            return default(TUser);
+        }
         private LdapSearchResults SearchUser(string username)
         {
-            _ldapConnection.Connect(_config.Url, LdapPort);
-            _ldapConnection.Bind(_config.BindDn, _config.BindCredentials);
+            //grab first host
+            var host = _config.Hosts.First();
+            var result = SearchUser(host, username);
+
+            return result;
+        }
+        private LdapSearchResults SearchUser(string domain, string username)
+        {
+            //grab first host
+            var host = _config.Hosts.First(f => f.Name.Equals(domain));
+            var result = SearchUser(host, username);
+
+            return result;
+        }
+        private LdapSearchResults SearchUser(LdapHost host, string username)
+        {
+            _ldapConnection.SecureSocketLayer = host.Ssl;
+            _ldapConnection.Connect(host.Url, host.Port);
+            _ldapConnection.Bind(host.BindDn, host.BindCredentials);
             var attributes = (new TUser()).LdapAttributes;
-            var searchFilter = string.Format(_config.SearchFilter, username);
+            var searchFilter = string.Format(host.SearchFilter, username);
             var result = _ldapConnection.Search(
-                _config.SearchBase,
+                host.SearchBase,
                 LdapConnection.SCOPE_SUB,
                 searchFilter,
                 attributes,

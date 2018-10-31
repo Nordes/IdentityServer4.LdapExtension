@@ -36,7 +36,7 @@ namespace IdentityServer.LdapExtension.UserStore
 
         private TimeSpan _dataExpireIn;
 
-        public RedisUserStore(ILdapService<TUser> authenticationService, IOptions<LdapConfig> config, ILogger<RedisUserStore<TUser>> logger)
+        public RedisUserStore(ILdapService<TUser> authenticationService, IOptions<LdapHost> config, ILogger<RedisUserStore<TUser>> logger)
         {
             _authenticationService = authenticationService;
             _logger = logger;
@@ -70,6 +70,36 @@ namespace IdentityServer.LdapExtension.UserStore
             try
             {
                 var user = _authenticationService.Login(username, password);
+                if (user != null)
+                {
+                    SetRedisData(user);
+                    return user;
+                }
+            }
+            catch (Exception e)
+            {
+                if (e.Message == "Login failed.")
+                {
+                    return default(TUser);
+                }
+
+                throw;
+            }
+
+            return default(TUser);
+        }
+        /// <summary>
+        /// Validates the credentials.
+        /// </summary>
+        /// <param name="domain">The domain name.</param>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <returns></returns>
+        public IAppUser ValidateCredentials(string domain, string username, string password)
+        {
+            try
+            {
+                var user = _authenticationService.Login(domain, username, password);
                 if (user != null)
                 {
                     SetRedisData(user);
@@ -125,6 +155,37 @@ namespace IdentityServer.LdapExtension.UserStore
             // Not found at all
             return null;
         }
+        public IAppUser FindBySubjectId(string domain, string subjectId)
+        {
+            // /IdentityServer/OpenId/providers/[Provider]/userId/[userId] &lt;== Key with data
+            // /IdentityServer/OpenId/users/[username] &lt;== Key forwarding to the provider+subjectId
+            const string keyFormat = "IdentityServer/OpenId/subjectId/{0}";
+            var rdb = _redis.GetDatabase();
+            var result = rdb.StringGet(string.Format(keyFormat, subjectId));
+
+            if (result.HasValue)
+            {
+                // IMPORTANT! This line might throw an exception if we change the format/version
+                IAppUser foundSubjectId = JsonConvert.DeserializeObject<TUser>(result.ToString(), _jsonSerializerSettings);
+
+                return foundSubjectId;
+            }
+
+            // Search in the LDAP
+            if (subjectId.Contains("ldap_"))
+            {
+                var found = _authenticationService.FindUser(domain, subjectId.Replace("ldap_", "")); // As of now, subjectId is the same as the username
+
+                if (found != null)
+                {
+                    SetRedisData(found);
+                    return found;
+                }
+            }
+
+            // Not found at all
+            return null;
+        }
 
         public IAppUser FindByUsername(string username)
         {
@@ -150,6 +211,39 @@ namespace IdentityServer.LdapExtension.UserStore
 
             // If nothing found in external, than we look in our current LDAP system. (We want to get always the latest details when we are on the LDAP).
             var ldapUser = _authenticationService.FindUser(username);
+            if (ldapUser != null)
+            {
+                SetRedisData(ldapUser);
+            }
+
+            // Not found at all
+            return ldapUser;
+        }
+        public IAppUser FindByUsername(string domain, string username)
+        {
+            const string keyFormat = "IdentityServer/OpenId/domain/{0}/username/{1}";
+
+            var rdb = _redis.GetDatabase();
+            var result = rdb.StringGet(string.Format(keyFormat, domain, username));
+
+            if (result.HasValue)
+            {
+                string foundSubjectIdKey = result.ToString();
+                var subject = rdb.StringGet(foundSubjectIdKey);
+
+                if (subject.HasValue)
+                {
+                    // IMPORTANT! This line might throw an exception if we change the format/version
+                    IAppUser foundSubjectId = JsonConvert.DeserializeObject<TUser>(subject.ToString(), _jsonSerializerSettings);
+
+                    return foundSubjectId;
+                }
+
+                _logger.LogWarning($"The key {foundSubjectIdKey} should not be existing or data is corrupted!");
+            }
+
+            // If nothing found in external, than we look in our current LDAP system. (We want to get always the latest details when we are on the LDAP).
+            var ldapUser = _authenticationService.FindUser(domain, username);
             if (ldapUser != null)
             {
                 SetRedisData(ldapUser);
@@ -267,6 +361,7 @@ namespace IdentityServer.LdapExtension.UserStore
             const string keyBySubjectId = "IdentityServer/OpenId/subjectId/{0}"; // <== contains the full data
             const string keyByUsername = "IdentityServer/OpenId/username/{0}"; // <== contains a link to the SubjectId
             const string keyByProviderAndUserid = "IdentityServer/OpenId/provider/{0}/userId/{1}"; // <== contains a link to the SubjectId
+            const string keyByDomainAndUsername = "IdentityServer/OpenId/domain/{0}/username/{1}"; // <== contains a link to the SubjectId
 
             var userStr = JsonConvert.SerializeObject(user, _jsonSerializerSettings);
             var subjectIdStorageKey = string.Format(keyBySubjectId, user.SubjectId);
@@ -284,6 +379,7 @@ namespace IdentityServer.LdapExtension.UserStore
             rdb.StringSet(subjectIdStorageKey, userStr);
             rdb.StringSet(string.Format(keyByUsername, user.Username), subjectIdStorageKey); // Might cause issue... or hack...
             rdb.StringSet(string.Format(keyByProviderAndUserid, user.ProviderName, user.ProviderSubjectId), subjectIdStorageKey);
+            rdb.StringSet(string.Format(keyByDomainAndUsername, user.ProviderName, user.Username), subjectIdStorageKey);
         }
     }
 }

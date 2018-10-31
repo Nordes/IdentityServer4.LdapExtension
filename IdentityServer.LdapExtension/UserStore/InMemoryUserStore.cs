@@ -54,6 +54,37 @@ namespace IdentityServer.LdapExtension.UserStore
 
             return default(TUser);
         }
+        /// <summary>
+        /// Validates the credentials.
+        /// </summary>
+        /// <param name="domain">The domain name.</param>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>
+        /// Returns the application user that match that account if the
+        /// authentication is successful.
+        /// </returns>
+        public IAppUser ValidateCredentials(string domain, string username, string password)
+        {
+            try
+            {
+                var user = _authenticationService.Login(domain, username, password);
+                if (user != null)
+                {
+                    return user;
+                }
+            }
+            catch (LoginFailedException)
+            {
+                return default(TUser);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return default(TUser);
+        }
 
         /// <summary>
         /// Finds the user by subject identifier, but does not add the user to the cache
@@ -65,6 +96,25 @@ namespace IdentityServer.LdapExtension.UserStore
         {
             // Search in external provider first
             var foundAnything = _users.Select(f => f.Value.FirstOrDefault(g => g.Value.SubjectId == subjectId)).FirstOrDefault();
+            if (foundAnything.Value != null)
+            {
+                return foundAnything.Value;
+            }
+
+            // Search in the LDAP
+            return _authenticationService.FindUser(subjectId.Replace("ldap_", ""));
+        }
+        /// <summary>
+        /// Finds the user by subject identifier, but does not add the user to the cache
+        /// since he's not logged in, in the current context.
+        /// </summary>
+        /// <param name="domain">The domain name.</param>
+        /// <param name="subjectId">The subject identifier.</param>
+        /// <returns>The application user.</returns>
+        public IAppUser FindBySubjectId(string domain, string subjectId)
+        {
+            // Search in external provider first
+            var foundAnything = _users.Select(f => f.Value.FirstOrDefault(g => g.Value.SubjectId == subjectId && g.Value.ProviderName == domain)).FirstOrDefault();
             if (foundAnything.Value != null)
             {
                 return foundAnything.Value;
@@ -92,6 +142,18 @@ namespace IdentityServer.LdapExtension.UserStore
 
             // If nothing found in external, than we look in our current LDAP system. (We want to get always the latest details when we are on the LDAP).
             return _authenticationService.FindUser(username.Replace("ldap_", ""));
+        }
+        public IAppUser FindByUsername(string domain, string username)
+        {
+            // Check the external data provider
+            var foundAnything = _users.Select(f => f.Value.FirstOrDefault(g => g.Value.Username == username && g.Value.ProviderName == domain)).FirstOrDefault();
+            if (foundAnything.Value != null)
+            {
+                return foundAnything.Value;
+            }
+
+            // If nothing found in external, than we look in our current LDAP system. (We want to get always the latest details when we are on the LDAP).
+            return _authenticationService.FindUser(domain, username.Replace("ldap_", ""));
         }
 
         /// <summary>
