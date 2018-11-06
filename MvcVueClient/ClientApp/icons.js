@@ -1,22 +1,25 @@
-import fontawesome from '@fortawesome/fontawesome'
+import { library } from '@fortawesome/fontawesome-svg-core'
 // Official documentation available at: https://github.com/FortAwesome/vue-fontawesome
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 // If not present, it won't be visible within the application. Considering that you
 // don't want all the icons for no reason. This is a good way to avoid importing too many
 // unnecessary things.
-fontawesome.library.add(
-  require('@fortawesome/fontawesome-free-solid/faEnvelope'),
-  require('@fortawesome/fontawesome-free-solid/faGraduationCap'),
-  require('@fortawesome/fontawesome-free-solid/faHome'),
-  require('@fortawesome/fontawesome-free-solid/faList'),
-  require('@fortawesome/fontawesome-free-solid/faSpinner'),
-  require('@fortawesome/fontawesome-free-solid/faSignInAlt'),
-  require('@fortawesome/fontawesome-free-solid/faUserCircle'),
+import { faEnvelope, faGraduationCap, faHome, faList, faSpinner, faSignInAlt, faUserCircle } from '@fortawesome/free-solid-svg-icons'
+import { faFontAwesome, faMicrosoft, faVuejs } from '@fortawesome/free-brands-svg-icons'
+
+library.add(
+  faEnvelope,
+  faGraduationCap,
+  faHome,
+  faList,
+  faSpinner,
+  faSignInAlt,
+  faUserCircle,
   // Brands
-  require('@fortawesome/fontawesome-free-brands/faFontAwesome'),
-  require('@fortawesome/fontawesome-free-brands/faMicrosoft'),
-  require('@fortawesome/fontawesome-free-brands/faVuejs')
+  faFontAwesome,
+  faMicrosoft,
+  faVuejs
 )
 
 export {
