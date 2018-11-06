@@ -15,6 +15,7 @@ namespace IdentityServer.LdapExtension
         /// <param name="password">The password.</param>
         /// <returns>Returns the logged in user.</returns>
         TUser Login(string username, string password);
+
         /// <summary>
         /// Logins using the specified credentials and domain name as specified in the host config
         /// </summary>
@@ -30,6 +31,7 @@ namespace IdentityServer.LdapExtension
         /// <param name="username">The username.</param>
         /// <returns>Returns the user when it exists.</returns>
         TUser FindUser(string username);
+
         /// <summary>
         /// Finds user by username and domain
         /// </summary>

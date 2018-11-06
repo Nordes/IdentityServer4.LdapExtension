@@ -26,7 +26,6 @@ namespace IdentityServer.LdapExtension.Sample
                     SearchFilter = "(&(objectClass=posixAccount)(objectClass=person)(uid={0}))",
                     Ssl = false,
                     Port = 389
-
                 }
             }
         };
