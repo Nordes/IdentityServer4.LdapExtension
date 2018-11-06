@@ -2,7 +2,7 @@
 
 
 # IdentityServer4.LdapExtension
-IdentityServer4 Ldap Extension (OpenLdap or ActiveDirectory).
+IdentityServer4 Ldap Extension ([OpenLdap](https://www.openldap.org/) or [ActiveDirectory](https://en.wikipedia.org/wiki/Active_Directory)).
 
 ## Table of content
 * [Nuget Package Installation](#installation)
