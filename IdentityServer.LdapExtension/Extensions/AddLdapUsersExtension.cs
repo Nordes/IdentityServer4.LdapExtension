@@ -47,7 +47,7 @@ namespace IdentityServer.LdapExtension.Extensions
         /// <typeparam name="TUserDetails">The type of the user details.</typeparam>
         /// <typeparam name="TCustomUserStore">The type of the custom user store.</typeparam>
         /// <param name="builder">The builder.</param>
-        /// <param name="configuration">The configuration.</param>
+        /// <param name="configuration">The ldap configuration.</param>
         /// <param name="customUserStore">The custom user store (ILdapUserStore).</param>
         /// <returns>
         /// Returns the builder instance
@@ -55,7 +55,7 @@ namespace IdentityServer.LdapExtension.Extensions
         public static IIdentityServerBuilder AddLdapUsers<TUserDetails, TCustomUserStore>(this IIdentityServerBuilder builder, IConfiguration configuration, ILdapUserStore customUserStore)
             where TUserDetails : IAppUser, new()
         {
-            builder.Services.Configure<LdapConfig>(configuration.GetSection("ldap"));
+            builder.Services.Configure<LdapConfig>(configuration);
             builder.Services.AddSingleton<ILdapService<TUserDetails>, LdapService<TUserDetails>>();
 
             // For testing purpose we can use the in memory. In reality it's better to have
