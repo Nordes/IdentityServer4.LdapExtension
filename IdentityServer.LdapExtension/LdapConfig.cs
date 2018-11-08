@@ -30,7 +30,7 @@ namespace IdentityServer.LdapExtension
         /// </summary>
         /// <example>389</example>
         /// <remarks>Required</remarks>
-        public int Port { get; set; }
+        public int Port { get; set; } = LdapConnection.DEFAULT_PORT;
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="LdapConfig" /> is SSL.
