@@ -30,6 +30,15 @@
                                     <label asp-for="Password"></label>
                                     <input type="password" class="form-control" placeholder="Password" asp-for="Password" autocomplete="off">
                                 </div>
+                                <div class="form-group">
+                                    <label asp-for="Domain"></label>
+                                    <select asp-for="Domain">
+                                        <option value="">All</option>
+                                        <option value="OpenLdap-Users">OpenLdap-Users</option>
+                                        <option value="OpenLdap-BuzzUsers">OpenLdap-BuzzUsers</option>
+
+                                    </select>
+                                </div>
                                 @if (Model.AllowRememberLogin)
                                 {
                                     <div class="form-group login-remember">
