@@ -1,15 +1,14 @@
-﻿using System;
+﻿using IdentityModel;
+using IdentityServer.LdapExtension.UserModel;
+using IdentityServer4.Stores.Serialization;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using StackExchange.Redis;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using IdentityModel;
-using IdentityServer4.Stores.Serialization;
-using IdentityServer.LdapExtension.UserModel;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using StackExchange.Redis;
 
 namespace IdentityServer.LdapExtension.UserStore
 {
@@ -36,27 +35,35 @@ namespace IdentityServer.LdapExtension.UserStore
 
         private TimeSpan _dataExpireIn;
 
-        public RedisUserStore(ILdapService<TUser> authenticationService, IOptions<LdapConfig> config, ILogger<RedisUserStore<TUser>> logger)
+        public RedisUserStore(
+            ILdapService<TUser> authenticationService,
+            ExtensionConfig ldapConfigurations,
+            ILogger<RedisUserStore<TUser>> logger)
         {
             _authenticationService = authenticationService;
             _logger = logger;
 
-            InitializeRedis(config.Value.Redis, config.Value.RefreshClaimsInSeconds);
+            InitializeRedis(ldapConfigurations);
         }
 
-        private void InitializeRedis(string connectionString, int refreshClaimsInSeconds)
+        private void InitializeRedis(ExtensionConfig config)
         {
-            _redis = ConnectionMultiplexer.Connect(connectionString);
+            if (string.IsNullOrEmpty(config.Redis))
+            {
+                throw new RedisConnectionException(ConnectionFailureType.UnableToConnect, "LDAP configuration is configured to use Redis, but there's no configuration. Please fix your injection in Startup.cs");
+            }
+
+            _redis = ConnectionMultiplexer.Connect(config.Redis);
             if (_redis.IsConnected)
             {
-                _logger.LogDebug("Connected to redis \\o/");
+                _logger.LogDebug($"LDAP {GetType().Name}: Connected to redis \\o/");
             }
             else
             {
-                _logger.LogError("Not able to connect to redis :(");
+                _logger.LogError($"LDAP {GetType().Name}: Not able to connect to redis :(");
             }
 
-            _dataExpireIn = TimeSpan.FromSeconds(refreshClaimsInSeconds);
+            _dataExpireIn = TimeSpan.FromSeconds(config.RefreshClaimsInSeconds ?? (double)-1);
         }
 
         /// <summary>
