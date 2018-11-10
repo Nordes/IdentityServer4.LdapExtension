@@ -116,8 +116,7 @@ namespace IdentityServer.LdapExtension
             }
             catch (Exception e)
             {
-                _logger.LogTrace(e.Message);
-                _logger.LogTrace(e.StackTrace);
+                _logger.LogTrace(default(EventId), e, e.Message);
                 // Swallow the exception since we don't expect an error from this method.
             }
 
