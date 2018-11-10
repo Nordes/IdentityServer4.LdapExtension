@@ -97,6 +97,37 @@ namespace IdentityServer.LdapExtension.UserStore
         }
 
         /// <summary>
+        /// Validates the credentials.
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="domain">The domain friendly name.</param>
+        /// <returns></returns>
+        public IAppUser ValidateCredentials(string username, string password, string domain)
+        {
+            try
+            {
+                var user = _authenticationService.Login(username, password, domain);
+                if (user != null)
+                {
+                    SetRedisData(user);
+                    return user;
+                }
+            }
+            catch (Exception e)
+            {
+                if (e.Message == "Login failed.")
+                {
+                    return default(TUser);
+                }
+
+                throw;
+            }
+
+            return default(TUser);
+        }
+
+        /// <summary>
         /// Finds the user by subject identifier.
         /// </summary>
         /// <param name="subjectId">The subject identifier.</param>

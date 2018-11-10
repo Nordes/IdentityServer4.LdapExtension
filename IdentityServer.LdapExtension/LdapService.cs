@@ -45,7 +45,22 @@ namespace IdentityServer.LdapExtension
         /// <exception cref="LoginFailedException">Login failed.</exception>
         public TUser Login(string username, string password)
         {
-            var searchResult = SearchUser(username);
+            return Login(username, password, null);
+        }
+
+        /// <summary>
+        /// Logins using the specified credentials.
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="domain">The domain friendly name.</param>
+        /// <returns>
+        /// Returns the logged in user.
+        /// </returns>
+        /// <exception cref="LoginFailedException">Login failed.</exception>
+        public TUser Login(string username, string password, string domain)
+        {
+            var searchResult = SearchUser(username, domain);
 
             if (searchResult.Results.hasMore())
             {
@@ -57,8 +72,12 @@ namespace IdentityServer.LdapExtension
                         searchResult.LdapConnection.Bind(user.DN, password);
                         if (searchResult.LdapConnection.Bound)
                         {
+                            //could change to ldap or change to configurable option
+                            var provider = "local";
+                            if (!String.IsNullOrEmpty(domain))
+                                provider = domain;
                             var appUser = new TUser();
-                            appUser.SetBaseDetails(user, "local"); // Should we change to LDAP.
+                            appUser.SetBaseDetails(user, provider); // Should we change to LDAP.
                             searchResult.LdapConnection.Disconnect();
 
                             return appUser;
@@ -82,20 +101,38 @@ namespace IdentityServer.LdapExtension
         /// Finds user by username.
         /// </summary>
         /// <param name="username">The username.</param>
+        /// <param name="domain">The domain friendly name.</param>
         /// <returns>
         /// Returns the user when it exists.
         /// </returns>
         public TUser FindUser(string username)
         {
-            var searchResult = SearchUser(username);
+            return FindUser(username, null);
+        }
+
+        /// <summary>
+        /// Finds user by username.
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <param name="domain">The domain friendly name.</param>
+        /// <returns>
+        /// Returns the user when it exists.
+        /// </returns>
+        public TUser FindUser(string username, string domain)
+        {
+            var searchResult = SearchUser(username, domain);
 
             try
             {
                 var user = searchResult.Results.next();
                 if (user != null)
                 {
+                    //could change to ldap or change to configurable option
+                    var provider = "local";
+                    if (!String.IsNullOrEmpty(domain))
+                        provider = domain;
                     var appUser = new TUser();
-                    appUser.SetBaseDetails(user, "local");
+                    appUser.SetBaseDetails(user, provider);
 
                     searchResult.LdapConnection.Disconnect();
 
@@ -114,9 +151,11 @@ namespace IdentityServer.LdapExtension
             return default(TUser);
         }
 
-        private (LdapSearchResults Results, LdapConnection LdapConnection) SearchUser(string username)
+        private (LdapSearchResults Results, LdapConnection LdapConnection) SearchUser(string username, string domain)
         {
             var allSearcheable = _config.Where(f => f.IsConcerned(username)).ToList();
+            if (!String.IsNullOrEmpty(domain))
+                allSearcheable = allSearcheable.Where(e => e.FriendlyName.Equals(domain)).ToList();
 
             if (allSearcheable == null || allSearcheable.Count() == 0)
             {
