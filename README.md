@@ -127,6 +127,7 @@ I plan to work on the following:
 
 ### Special thanks to
 * @marianahycit: Contribution
+* @uchetfield: Contribution (Issue #10)
 
 ## License
 MIT

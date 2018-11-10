@@ -12,9 +12,13 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>https://github.com/Nordes/IdentityServer4.LdapExtension/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/Nordes/IdentityServer4.LdapExtension/</PackageProjectUrl>
+    <PackageReleaseNotes>Please visit the [GitHub repository](https://github.com/Nordes/IdentityServer4.LdapExtension/) for more details.</PackageReleaseNotes>
+    <PackageIconUrl>https://www.honosoft.com/img/logo.png</PackageIconUrl>
     <Copyright>Nordès Ménard-Lamarre</Copyright>
     <RepositoryUrl>https://github.com/Nordes/IdentityServer4.LdapExtension/</RepositoryUrl>
     <PackageTags>IdentityServer4, Ldap, OpenLdap, ActiveDirectory</PackageTags>
+    <IncludeSymbols>true</IncludeSymbols>
+    <IncludeSource>true</IncludeSource>
     <NeutralLanguage />
   </PropertyGroup>
 
