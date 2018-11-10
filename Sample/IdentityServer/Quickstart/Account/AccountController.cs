@@ -98,7 +98,11 @@ namespace IdentityServer4.Quickstart.UI
             if (ModelState.IsValid)
             {
                 // validate username/password against Ldap
-                var user = _userStore.ValidateCredentials(model.Username, model.Password, model.Domain);
+                var user = _userStore.ValidateCredentials(model.Username, model.Password);
+
+                // In case you have multiple domain entry, you can also choose to do that.
+                // also, don't forget to uncomment the line 33+ in Login.cshtml
+                //var user = _userStore.ValidateCredentials(model.Username, model.Password, model.Domain);
                 if (user != default(IAppUser))
                 {
                     await _events.RaiseAsync(new UserLoginSuccessEvent(user.Username, user.SubjectId, user.Username));

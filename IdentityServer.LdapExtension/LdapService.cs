@@ -73,9 +73,7 @@ namespace IdentityServer.LdapExtension
                         if (searchResult.LdapConnection.Bound)
                         {
                             //could change to ldap or change to configurable option
-                            var provider = "local";
-                            if (!String.IsNullOrEmpty(domain))
-                                provider = domain;
+                            var provider = !string.IsNullOrEmpty(domain) ? domain : "local";
                             var appUser = new TUser();
                             appUser.SetBaseDetails(user, provider); // Should we change to LDAP.
                             searchResult.LdapConnection.Disconnect();
@@ -128,9 +126,7 @@ namespace IdentityServer.LdapExtension
                 if (user != null)
                 {
                     //could change to ldap or change to configurable option
-                    var provider = "local";
-                    if (!String.IsNullOrEmpty(domain))
-                        provider = domain;
+                    var provider = !string.IsNullOrEmpty(domain) ? domain : "local";
                     var appUser = new TUser();
                     appUser.SetBaseDetails(user, provider);
 
@@ -153,8 +149,10 @@ namespace IdentityServer.LdapExtension
         private (LdapSearchResults Results, LdapConnection LdapConnection) SearchUser(string username, string domain)
         {
             var allSearcheable = _config.Where(f => f.IsConcerned(username)).ToList();
-            if (!String.IsNullOrEmpty(domain))
+            if (!string.IsNullOrEmpty(domain))
+            {
                 allSearcheable = allSearcheable.Where(e => e.FriendlyName.Equals(domain)).ToList();
+            }
 
             if (allSearcheable == null || allSearcheable.Count() == 0)
             {

@@ -1,16 +1,16 @@
-﻿using System;
+﻿using IdentityModel;
+using IdentityServer.LdapExtension.Exceptions;
+using IdentityServer.LdapExtension.UserModel;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using IdentityModel;
-using IdentityServer.LdapExtension.Exceptions;
-using IdentityServer.LdapExtension.UserModel;
 
 namespace IdentityServer.LdapExtension.UserStore
 {
     public class InMemoryUserStore<TUser> : ILdapUserStore
-        where TUser: IAppUser, new()
+        where TUser : IAppUser, new()
     {
         private readonly ILdapService<TUser> _authenticationService;
         private readonly Dictionary<string, Dictionary<string, TUser>> _users = new Dictionary<string, Dictionary<string, TUser>>();
@@ -47,10 +47,6 @@ namespace IdentityServer.LdapExtension.UserStore
             {
                 return default(TUser);
             }
-            catch (Exception)
-            {
-                throw;
-            }
 
             return default(TUser);
         }
@@ -78,10 +74,6 @@ namespace IdentityServer.LdapExtension.UserStore
             catch (LoginFailedException)
             {
                 return default(TUser);
-            }
-            catch (Exception)
-            {
-                throw;
             }
 
             return default(TUser);
