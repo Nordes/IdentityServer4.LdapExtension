@@ -56,6 +56,38 @@ namespace IdentityServer.LdapExtension.UserStore
         }
 
         /// <summary>
+        /// Validates the credentials.
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="domain">The domain friendly name.</param>
+        /// <returns>
+        /// Returns the application user that match that account if the
+        /// authentication is successful.
+        /// </returns>
+        public IAppUser ValidateCredentials(string username, string password, string domain)
+        {
+            try
+            {
+                var user = _authenticationService.Login(username, password, domain);
+                if (user != null)
+                {
+                    return user;
+                }
+            }
+            catch (LoginFailedException)
+            {
+                return default(TUser);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return default(TUser);
+        }
+
+        /// <summary>
         /// Finds the user by subject identifier, but does not add the user to the cache
         /// since he's not logged in, in the current context.
         /// </summary>

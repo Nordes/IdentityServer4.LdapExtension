@@ -18,6 +18,18 @@ namespace IdentityServer.LdapExtension.UserStore
         IAppUser ValidateCredentials(string username, string password);
 
         /// <summary>
+        /// Validates the credentials by domain.
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="domain">The domain friendly name.</param>
+        /// <returns>
+        /// Returns the application user that match that account if the 
+        /// authentication is successful.
+        /// </returns>
+        IAppUser ValidateCredentials(string username, string password, string domain);
+
+        /// <summary>
         /// Finds the by subject identifier.
         /// </summary>
         /// <param name="subjectId">The subject identifier.</param>

@@ -111,4 +111,7 @@ Global
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {21CD9FE1-C93F-4EB9-9111-AF1C5B33CBA6}
 	EndGlobalSection
+	GlobalSection(NDepend) = preSolution
+		Project = ".\IdentityServer.LdapExtension.ndproj"
+	EndGlobalSection
 EndGlobal

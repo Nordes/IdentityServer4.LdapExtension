@@ -1,9 +1,10 @@
-﻿using System;
-using IdentityServer.LdapExtension.Exceptions;
+﻿using IdentityServer.LdapExtension.Exceptions;
 using IdentityServer.LdapExtension.UserModel;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Novell.Directory.Ldap;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace IdentityServer.LdapExtension
 {
@@ -14,36 +15,23 @@ namespace IdentityServer.LdapExtension
         where TUser : IAppUser, new()
     {
         private readonly ILogger<LdapService<TUser>> _logger;
-        private readonly LdapConfig _config;
-        private readonly LdapConnection _ldapConnection;
+        private readonly ICollection<LdapConfig> _config;
+        private readonly Dictionary<string, LdapConnection> _ldapConnections = new Dictionary<string, LdapConnection>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LdapService{TUser}"/> class.
         /// </summary>
         /// <param name="config">The configuration.</param>
         /// <param name="logger">The logger.</param>
-        public LdapService(IOptions<LdapConfig> config, ILogger<LdapService<TUser>> logger)
+        public LdapService(ExtensionConfig config, ILogger<LdapService<TUser>> logger)
         {
             _logger = logger;
-            _config = config.Value;
+            _config = config.Connections;
 
-            _ldapConnection = new LdapConnection
+            _config.ToList().ForEach(f => _ldapConnections.Add(f.FriendlyName, new LdapConnection
             {
-                SecureSocketLayer = _config.Ssl
-            };
-        }
-
-        private int LdapPort
-        {
-            get
-            {
-                if (_config.Port == 0)
-                {
-                    return _config.Ssl ? LdapConnection.DEFAULT_SSL_PORT : LdapConnection.DEFAULT_PORT;
-                }
-
-                return _config.Port;
-            }
+                SecureSocketLayer = f.Ssl
+            }));
         }
 
         /// <summary>
@@ -57,21 +45,40 @@ namespace IdentityServer.LdapExtension
         /// <exception cref="LoginFailedException">Login failed.</exception>
         public TUser Login(string username, string password)
         {
-            var searchResult = SearchUser(username);
+            return Login(username, password, null);
+        }
 
-            if (searchResult.hasMore())
+        /// <summary>
+        /// Logins using the specified credentials.
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="domain">The domain friendly name.</param>
+        /// <returns>
+        /// Returns the logged in user.
+        /// </returns>
+        /// <exception cref="LoginFailedException">Login failed.</exception>
+        public TUser Login(string username, string password, string domain)
+        {
+            var searchResult = SearchUser(username, domain);
+
+            if (searchResult.Results.hasMore())
             {
                 try
                 {
-                    var user = searchResult.next();
+                    var user = searchResult.Results.next();
                     if (user != null)
                     {
-                        _ldapConnection.Bind(user.DN, password);
-                        if (_ldapConnection.Bound)
+                        searchResult.LdapConnection.Bind(user.DN, password);
+                        if (searchResult.LdapConnection.Bound)
                         {
+                            //could change to ldap or change to configurable option
+                            var provider = "local";
+                            if (!String.IsNullOrEmpty(domain))
+                                provider = domain;
                             var appUser = new TUser();
-                            appUser.SetBaseDetails(user, "local"); // Should we change to LDAP.
-                            _ldapConnection.Disconnect();
+                            appUser.SetBaseDetails(user, provider); // Should we change to LDAP.
+                            searchResult.LdapConnection.Disconnect();
 
                             return appUser;
                         }
@@ -85,7 +92,7 @@ namespace IdentityServer.LdapExtension
                 }
             }
 
-            _ldapConnection.Disconnect();
+            searchResult.LdapConnection.Disconnect();
 
             return default(TUser);
         }
@@ -94,22 +101,40 @@ namespace IdentityServer.LdapExtension
         /// Finds user by username.
         /// </summary>
         /// <param name="username">The username.</param>
+        /// <param name="domain">The domain friendly name.</param>
         /// <returns>
         /// Returns the user when it exists.
         /// </returns>
         public TUser FindUser(string username)
         {
-            var searchResult = SearchUser(username);
+            return FindUser(username, null);
+        }
+
+        /// <summary>
+        /// Finds user by username.
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <param name="domain">The domain friendly name.</param>
+        /// <returns>
+        /// Returns the user when it exists.
+        /// </returns>
+        public TUser FindUser(string username, string domain)
+        {
+            var searchResult = SearchUser(username, domain);
 
             try
             {
-                var user = searchResult.next();
+                var user = searchResult.Results.next();
                 if (user != null)
                 {
+                    //could change to ldap or change to configurable option
+                    var provider = "local";
+                    if (!String.IsNullOrEmpty(domain))
+                        provider = domain;
                     var appUser = new TUser();
-                    appUser.SetBaseDetails(user, "local");
+                    appUser.SetBaseDetails(user, provider);
 
-                    _ldapConnection.Disconnect();
+                    searchResult.LdapConnection.Disconnect();
 
                     return appUser;
                 }
@@ -120,26 +145,50 @@ namespace IdentityServer.LdapExtension
                 // Swallow the exception since we don't expect an error from this method.
             }
 
-            _ldapConnection.Disconnect();
+            searchResult.LdapConnection.Disconnect();
 
             return default(TUser);
         }
 
-        private LdapSearchResults SearchUser(string username)
+        private (LdapSearchResults Results, LdapConnection LdapConnection) SearchUser(string username, string domain)
         {
-            _ldapConnection.Connect(_config.Url, LdapPort);
-            _ldapConnection.Bind(_config.BindDn, _config.BindCredentials);
-            var attributes = (new TUser()).LdapAttributes;
-            var searchFilter = string.Format(_config.SearchFilter, username);
-            var result = _ldapConnection.Search(
-                _config.SearchBase,
-                LdapConnection.SCOPE_SUB,
-                searchFilter,
-                attributes,
-                false
-            );
+            var allSearcheable = _config.Where(f => f.IsConcerned(username)).ToList();
+            if (!String.IsNullOrEmpty(domain))
+                allSearcheable = allSearcheable.Where(e => e.FriendlyName.Equals(domain)).ToList();
 
-            return result;
+            if (allSearcheable == null || allSearcheable.Count() == 0)
+            {
+                throw new LoginFailedException(
+                    "Login failed.",
+                    new NoLdapSearchableException("No searchable LDAP"));
+            }
+
+            // Could become async
+            foreach (var matchConfig in allSearcheable)
+            {
+                var ldapConnection = _ldapConnections[matchConfig.FriendlyName];
+
+                ldapConnection.Connect(matchConfig.Url, matchConfig.FinalLdapConnectionPort);
+                ldapConnection.Bind(matchConfig.BindDn, matchConfig.BindCredentials);
+                var attributes = new TUser().LdapAttributes;
+                var searchFilter = string.Format(matchConfig.SearchFilter, username);
+                var result = ldapConnection.Search(
+                    matchConfig.SearchBase,
+                    LdapConnection.SCOPE_SUB,
+                    searchFilter,
+                    attributes,
+                    false
+                );
+
+                if (result.hasMore()) // Count is async (not waiting). The hasMore() always works.
+                {
+                    return (Results: result, LdapConnection: ldapConnection);
+                }
+            }
+
+            throw new LoginFailedException(
+                    "Login failed.",
+                    new UserNotFoundException("User not found in any LDAP."));
         }
     }
 }

@@ -2,6 +2,8 @@
 using IdentityServer.LdapExtension.UserStore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace IdentityServer.LdapExtension.Extensions
 {
@@ -20,7 +22,7 @@ namespace IdentityServer.LdapExtension.Extensions
         public static IIdentityServerBuilder AddLdapUsers<TUserDetails>(this IIdentityServerBuilder builder, IConfiguration configuration, UserStore userStore)
             where TUserDetails : IAppUser, new()
         {
-            builder.Services.Configure<LdapConfig>(configuration);
+            RegisterLdapConfigurations(builder, configuration);
             builder.Services.AddSingleton<ILdapService<TUserDetails>, LdapService<TUserDetails>>();
 
             // For testing purpose we can use the in memory. In reality it's better to have
@@ -33,7 +35,6 @@ namespace IdentityServer.LdapExtension.Extensions
             {
                 builder.Services.AddSingleton<ILdapUserStore, RedisUserStore<TUserDetails>>();
             }
-
 
             builder.AddProfileService<LdapUserProfileService<TUserDetails>>(); // Claims? + ApplicationUser should be sent using a parameter
             builder.AddResourceOwnerValidator<LdapUserResourceOwnerPasswordValidator<TUserDetails>>(); // Get user profiles
@@ -55,7 +56,7 @@ namespace IdentityServer.LdapExtension.Extensions
         public static IIdentityServerBuilder AddLdapUsers<TUserDetails, TCustomUserStore>(this IIdentityServerBuilder builder, IConfiguration configuration, ILdapUserStore customUserStore)
             where TUserDetails : IAppUser, new()
         {
-            builder.Services.Configure<LdapConfig>(configuration);
+            RegisterLdapConfigurations(builder, configuration);
             builder.Services.AddSingleton<ILdapService<TUserDetails>, LdapService<TUserDetails>>();
 
             // For testing purpose we can use the in memory. In reality it's better to have
@@ -66,6 +67,32 @@ namespace IdentityServer.LdapExtension.Extensions
             builder.AddResourceOwnerValidator<LdapUserResourceOwnerPasswordValidator<TUserDetails>>();
 
             return builder;
+        }
+
+        private static void RegisterLdapConfigurations(IIdentityServerBuilder builder, IConfiguration configuration)
+        {
+            // Consider multiple configuration as a default way of working
+            var configs = (ExtensionConfig)configuration.Get(typeof(ExtensionConfig));
+
+            // Fallback to one configuration in case the collection was containing 0.
+            if (configs.Connections?.Count == null)
+            {
+                var config = (LdapConfig)configuration.Get(typeof(LdapConfig));
+
+                configs.Redis = config.Redis;
+                configs.RefreshClaimsInSeconds = config.RefreshClaimsInSeconds;
+                configs.Connections = new List<LdapConfig> { config };
+            }
+
+            // Enforce a name for each.
+            var configIndex = 0;
+            configs.Connections.ToList().ForEach(f =>
+            {
+                configIndex++;
+                f.FriendlyName = !string.IsNullOrEmpty(f.FriendlyName) ? f.FriendlyName : $"Config #{configIndex}";
+            });
+
+            builder.Services.AddSingleton(configs);
         }
     }
 }
