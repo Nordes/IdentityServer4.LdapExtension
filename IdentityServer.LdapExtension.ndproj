@@ -1,83 +1,34 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <NDepend AppName="IdentityServer.LdapExtension" Platform="DotNet" FileWrittenByProductVersion="2018.2.1.9119">
   <OutputDir KeepXmlFiles="False">D:\GitHub\IdentityServer4.LdapExtension\NDependOut</OutputDir>
   <Assemblies>
-    <Name>QuickstartIdentityServer</Name>
-    <Name>MvcVueClient</Name>
     <Name>IdentityServer.LdapExtension</Name>
-    <Name>IdentityServer.LdapExtension.Unit</Name>
-    <Name>Api</Name>
-    <Name>MvcClient</Name>
   </Assemblies>
   <FrameworkAssemblies>
-    <Name>System.Runtime</Name>
-    <Name>System.Diagnostics.Debug</Name>
-    <Name>Microsoft.AspNetCore.Mvc.ViewFeatures</Name>
     <Name>IdentityServer4</Name>
-    <Name>Microsoft.AspNetCore.Http.Abstractions</Name>
-    <Name>Microsoft.AspNetCore.Authentication.Abstractions</Name>
-    <Name>Microsoft.AspNetCore.Mvc.Core</Name>
-    <Name>Microsoft.AspNetCore.Mvc.Abstractions</Name>
-    <Name>System.Threading.Tasks</Name>
-    <Name>System.Security.Principal.Windows</Name>
-    <Name>System.Security.Claims</Name>
-    <Name>System.Collections</Name>
-    <Name>System.ComponentModel.Annotations</Name>
-    <Name>Microsoft.AspNetCore.Authorization</Name>
     <Name>Microsoft.Extensions.Logging.Abstractions</Name>
-    <Name>Microsoft.AspNetCore.Hosting.Abstractions</Name>
     <Name>Microsoft.Extensions.Configuration.Abstractions</Name>
     <Name>Microsoft.Extensions.DependencyInjection.Abstractions</Name>
-    <Name>Microsoft.AspNetCore.Server.IISIntegration</Name>
-    <Name>System.Linq</Name>
-    <Name>System.Net.Primitives</Name>
-    <Name>Microsoft.AspNetCore.Http.Features</Name>
-    <Name>Microsoft.Extensions.Primitives</Name>
-    <Name>System.Console</Name>
-    <Name>Microsoft.AspNetCore.Hosting</Name>
-    <Name>Microsoft.AspNetCore</Name>
-    <Name>Microsoft.AspNetCore.Mvc</Name>
-    <Name>Microsoft.AspNetCore.Diagnostics</Name>
-    <Name>Microsoft.AspNetCore.StaticFiles</Name>
-    <Name>System.Security.Principal</Name>
-    <Name>Microsoft.AspNetCore.Razor.Runtime</Name>
-    <Name>Microsoft.AspNetCore.Authentication.OpenIdConnect</Name>
-    <Name>Microsoft.AspNetCore.Routing</Name>
-    <Name>System.Runtime.Extensions</Name>
-    <Name>Microsoft.Extensions.Configuration</Name>
-    <Name>Microsoft.Extensions.Configuration.FileExtensions</Name>
-    <Name>Microsoft.Extensions.Configuration.Json</Name>
-    <Name>Microsoft.Extensions.Configuration.EnvironmentVariables</Name>
     <Name>System.IdentityModel.Tokens.Jwt</Name>
     <Name>Microsoft.AspNetCore.Authentication</Name>
-    <Name>Microsoft.AspNetCore.Authentication.Cookies</Name>
-    <Name>Microsoft.Extensions.Logging.Console</Name>
-    <Name>Microsoft.Extensions.Logging.Debug</Name>
-    <Name>Microsoft.AspNetCore.SpaServices</Name>
-    <Name>Microsoft.AspNetCore.Mvc.Formatters.Json</Name>
     <Name>netstandard</Name>
     <Name>Novell.Directory.Ldap.NETStandard</Name>
-    <Name>Microsoft.Extensions.Options</Name>
     <Name>StackExchange.Redis</Name>
     <Name>Newtonsoft.Json</Name>
     <Name>IdentityModel</Name>
-    <Name>Microsoft.Extensions.Options.ConfigurationExtensions</Name>
-    <Name>Moq</Name>
-    <Name>xunit.core</Name>
-    <Name>System.Linq.Expressions</Name>
-    <Name>xunit.assert</Name>
-    <Name>IdentityServer4.AccessTokenValidation</Name>
+    <Name>Microsoft.Extensions.Configuration.Binder</Name>
   </FrameworkAssemblies>
   <Dirs>
-    <Dir>D:\GitHub\IdentityServer4.LdapExtension\Sample\IdentityServer\bin\debug\netcoreapp2.0</Dir>
-    <Dir>D:\GitHub\IdentityServer4.LdapExtension\MvcVueClient\bin\debug\netcoreapp2.1</Dir>
-    <Dir>D:\GitHub\IdentityServer4.LdapExtension\IdentityServer.LdapExtension.Unit\bin\debug\netcoreapp2.0</Dir>
-    <Dir>D:\GitHub\IdentityServer4.LdapExtension\Sample\Api\bin\debug\netcoreapp2.0</Dir>
-    <Dir>D:\GitHub\IdentityServer4.LdapExtension\Sample\Client\bin\debug\netcoreapp2.0</Dir>
     <Dir>C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.1.5</Dir>
     <Dir>C:\Program Files\dotnet\store\x64\netcoreapp2.0</Dir>
     <Dir>C:\Program Files\dotnet\sdk\NuGetFallbackFolder</Dir>
     <Dir>C:\Users\norde\.nuget\packages</Dir>
+    <Dir>D:\GitHub\IdentityServer4.LdapExtension\MvcVueClient\bin\debug\netcoreapp2.1</Dir>
+    <Dir>D:\GitHub\IdentityServer4.LdapExtension\Sample\IdentityServer\bin\debug\netcoreapp2.1</Dir>
+    <Dir>D:\GitHub\IdentityServer4.LdapExtension\IdentityServer.LdapExtension\bin\debug\netstandard2.0</Dir>
+    <Dir>D:\GitHub\IdentityServer4.LdapExtension\IdentityServer.LdapExtension.Unit\bin\debug\netcoreapp2.1</Dir>
+    <Dir>D:\GitHub\IdentityServer4.LdapExtension\Sample\Api\bin\debug\netcoreapp2.1</Dir>
+    <Dir>D:\GitHub\IdentityServer4.LdapExtension\Sample\Client\bin\debug\netcoreapp2.1</Dir>
   </Dirs>
   <MergeCodeGeneratedByCompiler>True</MergeCodeGeneratedByCompiler>
   <Report Kind="0" SectionsEnabled="110591" XslPath="" Flags="261120" />
@@ -143,8 +94,7 @@
       <High2Critical_SeverityThreshold>72000000000</High2Critical_SeverityThreshold>
       <Critical2Blocker_SeverityThreshold>360000000000</Critical2Blocker_SeverityThreshold>
     </DebtSettings>
-  </ProjectDebtSettings>
-  <Queries>
+  </ProjectDebtSettings><Queries>
     <Group Name="Quality Gates" Active="True" ShownInReport="True">
       <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Quality Gates Evolution</Name>
 from qg in QualityGates
@@ -318,7 +268,7 @@ select new { r, issues = r.Issues() }
 // the reason is certainly that rules that rely on diff are not counted
 // because the baseline is not defined.
 //</Description>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <QualityGate Name="Percentage Debt" Unit="%" />
+      <Query Active="False" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <QualityGate Name="Percentage Debt" Unit="%" />
 failif value > 30%
 warnif value > 20%
 let timeToDev = codeBase.EffortToDevelop()
@@ -359,7 +309,7 @@ Issues.Sum(i => i.Debt).ToManDay()
 // The Debt is defined as the sum of estimated effort to fix all issues.
 // Debt documentation: https://www.ndepend.com/docs/technical-debt#Debt
 //</Description>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <QualityGate Name="New Debt since Baseline" Unit="man-days" />
+      <Query Active="False" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <QualityGate Name="New Debt since Baseline" Unit="man-days" />
 failif value > 2 man-days
 warnif value > 0 man-days
 let debt = Issues.Sum(i => i.Debt)
@@ -376,7 +326,7 @@ select (debt - debtInBaseline).ToManDay()
 //
 // Debt documentation: https://www.ndepend.com/docs/technical-debt#Debt
 //</Description>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <QualityGate Name="Debt Rating per Namespace" Unit="namespaces" />
+      <Query Active="False" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <QualityGate Name="Debt Rating per Namespace" Unit="namespaces" />
 failif count > 0 namespaces
 
 from n in Application.Namespaces
@@ -433,7 +383,7 @@ Issues.Sum(i => i.AnnualInterest).ToManDay()
 // used to infer an Annual-Interest value from a Severity level.
 // Annual Interest documentation: https://www.ndepend.com/docs/technical-debt#AnnualInterest
 //</Description>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <QualityGate Name="New Annual Interest since Baseline" Unit="man-days" />
+      <Query Active="False" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <QualityGate Name="New Annual Interest since Baseline" Unit="man-days" />
 failif value > 2 man-days
 warnif value > 0 man-days
 let ai = Issues.Sum(i => i.AnnualInterest)
@@ -11880,6 +11830,4 @@ select new {
 //</HowToFix>]]></Query>
       </Group>
     </Group>
-  </Queries>
-  <WarnFilter />
-</NDepend>
+  </Queries></NDepend>
