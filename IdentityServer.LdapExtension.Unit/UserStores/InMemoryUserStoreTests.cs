@@ -2,6 +2,7 @@
 using IdentityServer.LdapExtension.UserModel;
 using IdentityServer.LdapExtension.UserStore;
 using Moq;
+using Novell.Directory.Ldap;
 using System;
 using Xunit;
 
@@ -113,6 +114,25 @@ namespace IdentityServer.LdapExtension.Unit.UserStores
 
             Assert.Equal(default(OpenLdapAppUser), user);
             _authenticationService.VerifyAll();
+        }
+
+        [Fact]
+        public void ActiveDirectoryAttributeDisplayNameIsNull_SetsAppUserDisplayNameNull()
+        {
+            var ldapAttributeSet = new LdapAttributeSet();
+            ldapAttributeSet.Add(new LdapAttribute("distinguishedName", "cn=testuser,cn=users,dc=example,dc=com"));
+            ldapAttributeSet.Add(new LdapAttribute("cn", "testuser"));
+            ldapAttributeSet.Add(new LdapAttribute("givenName", "Test"));
+            ldapAttributeSet.Add(new LdapAttribute("name", "testuser"));
+            ldapAttributeSet.Add(new LdapAttribute("userPrincipalName", "testuser@example.com"));
+            ldapAttributeSet.Add(new LdapAttribute("sAMAccountName", "testuser"));
+
+            var ldapEntry = new LdapEntry("cn=testuser,cn=users,dc=example,dc=com", ldapAttributeSet);
+
+            var appUser = new ActiveDirectoryAppUser();
+            appUser.SetBaseDetails(ldapEntry, "local");
+
+            Assert.Null(appUser.DisplayName);
         }
     }
 }
