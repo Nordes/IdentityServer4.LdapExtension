@@ -127,7 +127,7 @@ namespace IdentityServer.LdapExtension.UserModel
         /// <param name="providerName">Specific provider such as Google, Facebook, etc.</param>
         public void SetBaseDetails(LdapEntry ldapEntry, string providerName)
         {
-            DisplayName = ldapEntry.getAttribute(ActiveDirectoryLdapAttributes.DisplayName.ToDescriptionString()).StringValue;
+            DisplayName = ldapEntry.getAttribute(ActiveDirectoryLdapAttributes.DisplayName.ToDescriptionString())?.StringValue;
             Username = ldapEntry.getAttribute(ActiveDirectoryLdapAttributes.UserName.ToDescriptionString()).StringValue;
             ProviderName = providerName;
             SubjectId = Username; // We could use the uidNumber instead in a sha algo.
