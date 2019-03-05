@@ -125,11 +125,13 @@ I plan to work on the following:
 * Implement a cache invalidation based on time (After x time without being hit, remove from redis or from memory).
 
 ## Contributors
+**Main contributor**
 * @Nordes: The main author of the package (@me)
-
+  
 ### Special thanks to
 * @marianahycit: Contribution
 * @uchetfield: Contribution (Issue #10)
+* @ttutko
 
 ## License
 MIT
