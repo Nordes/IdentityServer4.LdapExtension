@@ -19,16 +19,16 @@
     <Name>Microsoft.Extensions.Configuration.Binder</Name>
   </FrameworkAssemblies>
   <Dirs>
-    <Dir>C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.1.5</Dir>
+    <Dir>C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.2.2</Dir>
     <Dir>C:\Program Files\dotnet\store\x64\netcoreapp2.0</Dir>
     <Dir>C:\Program Files\dotnet\sdk\NuGetFallbackFolder</Dir>
     <Dir>C:\Users\norde\.nuget\packages</Dir>
-    <Dir>D:\GitHub\IdentityServer4.LdapExtension\MvcVueClient\bin\debug\netcoreapp2.1</Dir>
-    <Dir>D:\GitHub\IdentityServer4.LdapExtension\Sample\IdentityServer\bin\debug\netcoreapp2.1</Dir>
+    <Dir>D:\GitHub\IdentityServer4.LdapExtension\MvcVueClient\bin\debug\netcoreapp2.2</Dir>
+    <Dir>D:\GitHub\IdentityServer4.LdapExtension\Sample\IdentityServer\bin\debug\netcoreapp2.2</Dir>
     <Dir>D:\GitHub\IdentityServer4.LdapExtension\IdentityServer.LdapExtension\bin\debug\netstandard2.0</Dir>
-    <Dir>D:\GitHub\IdentityServer4.LdapExtension\IdentityServer.LdapExtension.Unit\bin\debug\netcoreapp2.1</Dir>
-    <Dir>D:\GitHub\IdentityServer4.LdapExtension\Sample\Api\bin\debug\netcoreapp2.1</Dir>
-    <Dir>D:\GitHub\IdentityServer4.LdapExtension\Sample\Client\bin\debug\netcoreapp2.1</Dir>
+    <Dir>D:\GitHub\IdentityServer4.LdapExtension\IdentityServer.LdapExtension.Unit\bin\debug\netcoreapp2.2</Dir>
+    <Dir>D:\GitHub\IdentityServer4.LdapExtension\Sample\Api\bin\debug\netcoreapp2.2</Dir>
+    <Dir>D:\GitHub\IdentityServer4.LdapExtension\Sample\Client\bin\debug\netcoreapp2.2</Dir>
   </Dirs>
   <MergeCodeGeneratedByCompiler>True</MergeCodeGeneratedByCompiler>
   <Report Kind="0" SectionsEnabled="110591" XslPath="" Flags="261120" />
