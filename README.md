@@ -24,7 +24,10 @@ The plugin is easy to install to your solution. Built using **.Net Standard 2.0*
 Install-Package IdentityServer.LdapExtension
 ```
 
-> Be aware that version 2.0.0 is for version 2.2.x of IdentityServer4. The version that comes after is for the IdentityServer4 2.3.0.
+> Be aware of the dependency with IdentityServer4. The version of the package is visible in your Visual Studio or through Nuget.org.
+> - Ldap Extension 2.0.0 goes with IdentityServer 2.2.x 
+> - Ldap Extension 2.1.7 goes with IdentityServer 2.3.x 
+> - Ldap Extension 2.1.8 goes with IdentityServer 2.4.x
 
 ## Configuration for IdentityServer4 Server
 An easy extension method have been created in order to add the LDAP as a provider to your IdentityServer. For this you simply have to use the `AddLdapUsers<TApplicationUser>(LdapConfigSection, StoreTypeOrCustomStore)`. The configuration has to be provided or it won't work. The configuration is described [here](#IS.AppSettings).
