@@ -53,15 +53,17 @@ namespace IdentityServer.LdapExtension.Extensions
         /// <returns>
         /// Returns the builder instance
         /// </returns>
-        public static IIdentityServerBuilder AddLdapUsers<TUserDetails, TCustomUserStore>(this IIdentityServerBuilder builder, IConfiguration configuration, ILdapUserStore customUserStore)
+        public static IIdentityServerBuilder AddLdapUsers<TUserDetails, TCustomUserStore>(this IIdentityServerBuilder builder, IConfiguration configuration)
             where TUserDetails : IAppUser, new()
+            where TCustomUserStore : ILdapUserStore
         {
             RegisterLdapConfigurations(builder, configuration);
             builder.Services.AddSingleton<ILdapService<TUserDetails>, LdapService<TUserDetails>>();
 
             // For testing purpose we can use the in memory. In reality it's better to have
             // your own implementation. An example with Redis exists in the repository
-            builder.Services.AddSingleton(customUserStore);
+            builder.Services.AddSingleton(typeof(TCustomUserStore));
+            builder.Services.AddSingleton(serviceProvider => (ILdapUserStore)serviceProvider.GetService(typeof(TCustomUserStore)));
 
             builder.AddProfileService<LdapUserProfileService<TUserDetails>>();
             builder.AddResourceOwnerValidator<LdapUserResourceOwnerPasswordValidator<TUserDetails>>();
