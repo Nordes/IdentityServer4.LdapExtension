@@ -3,7 +3,6 @@ using IdentityServer.LdapExtension.UserModel;
 using Microsoft.Extensions.Logging;
 using Novell.Directory.Ldap;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace IdentityServer.LdapExtension
@@ -15,8 +14,7 @@ namespace IdentityServer.LdapExtension
         where TUser : IAppUser, new()
     {
         private readonly ILogger<LdapService<TUser>> _logger;
-        private readonly ICollection<LdapConfig> _config;
-        private readonly Dictionary<string, LdapConnection> _ldapConnections = new Dictionary<string, LdapConnection>();
+        private readonly LdapConfig[] _config;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LdapService{TUser}"/> class.
@@ -26,12 +24,7 @@ namespace IdentityServer.LdapExtension
         public LdapService(ExtensionConfig config, ILogger<LdapService<TUser>> logger)
         {
             _logger = logger;
-            _config = config.Connections;
-
-            _config.ToList().ForEach(f => _ldapConnections.Add(f.FriendlyName, new LdapConnection
-            {
-                SecureSocketLayer = f.Ssl
-            }));
+            _config = config.Connections.ToArray();
         }
 
         /// <summary>
@@ -164,23 +157,26 @@ namespace IdentityServer.LdapExtension
             // Could become async
             foreach (var matchConfig in allSearcheable)
             {
-                var ldapConnection = _ldapConnections[matchConfig.FriendlyName];
-
-                ldapConnection.Connect(matchConfig.Url, matchConfig.FinalLdapConnectionPort);
-                ldapConnection.Bind(matchConfig.BindDn, matchConfig.BindCredentials);
-                var attributes = new TUser().LdapAttributes;
-                var searchFilter = string.Format(matchConfig.SearchFilter, username);
-                var result = ldapConnection.Search(
-                    matchConfig.SearchBase,
-                    LdapConnection.SCOPE_SUB,
-                    searchFilter,
-                    attributes,
-                    false
-                );
-
-                if (result.hasMore()) // Count is async (not waiting). The hasMore() always works.
+                using(var ldapConnection = new LdapConnection {
+                    SecureSocketLayer = matchConfig.Ssl
+                }) 
                 {
-                    return (Results: result, LdapConnection: ldapConnection);
+                    ldapConnection.Connect(matchConfig.Url, matchConfig.FinalLdapConnectionPort);
+                    ldapConnection.Bind(matchConfig.BindDn, matchConfig.BindCredentials);
+                    var attributes = new TUser().LdapAttributes;
+                    var searchFilter = string.Format(matchConfig.SearchFilter, username);
+                    var result = ldapConnection.Search(
+                        matchConfig.SearchBase,
+                        LdapConnection.SCOPE_SUB,
+                        searchFilter,
+                        attributes,
+                        false
+                    );
+
+                    if (result.hasMore()) // Count is async (not waiting). The hasMore() always works.
+                    {
+                        return (Results: result, LdapConnection: ldapConnection);
+                    }
                 }
             }
 
