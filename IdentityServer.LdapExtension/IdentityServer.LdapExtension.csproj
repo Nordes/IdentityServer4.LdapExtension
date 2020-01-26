@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Nordès Ménard-Lamarre</Authors>
-    <Version>2.0.0</Version>
+    <Version>2.1.14</Version>
     <Company>HoNoSoFt</Company>
     <Description>Extension for IdentityServer 4 in order to use LDAP as a plugin. It is also extensible enough in order to use custom LDAP schema such as OpenLdap or Active Directory.</Description>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
