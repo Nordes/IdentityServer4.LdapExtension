@@ -16,7 +16,7 @@
     "install": "npm run build-vendor:dev"
   },
   "dependencies": {
-    "axios": "^0.15.3",
+    "axios": "^0.18.1",
     "core-js": "^2.5.7",
     "vue": "^2.5.17",
     "vue-router": "^2.8.1",
