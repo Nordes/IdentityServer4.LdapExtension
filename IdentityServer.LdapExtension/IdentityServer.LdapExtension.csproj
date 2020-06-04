@@ -25,7 +25,7 @@
   <ItemGroup>
     <PackageReference Include="IdentityServer4" Version="2.4.0" />
     <PackageReference Include="Novell.Directory.Ldap.NETStandard" Version="2.3.8" />
-    <PackageReference Include="StackExchange.Redis" Version="2.0.600" />
+    <PackageReference Include="StackExchange.Redis" Version="2.1.30" />
   </ItemGroup>
 
 </Project>
