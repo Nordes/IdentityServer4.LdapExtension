@@ -61,7 +61,7 @@ namespace IdentityServer4.Quickstart.UI
             if (vm.IsExternalLoginOnly)
             {
                 // we only have one option for logging in and it's an external provider
-                return await ExternalLogin(vm.ExternalLoginScheme, returnUrl);
+                return ExternalLogin(vm.ExternalLoginScheme, returnUrl);
             }
 
             return View(vm);
@@ -145,7 +145,7 @@ namespace IdentityServer4.Quickstart.UI
         /// initiate roundtrip to external authentication provider
         /// </summary>
         [HttpGet]
-        public async Task<IActionResult> ExternalLogin(string provider, string returnUrl)
+        public IActionResult ExternalLogin(string provider, string returnUrl)
         {
             var props = new AuthenticationProperties()
             {
@@ -159,40 +159,42 @@ namespace IdentityServer4.Quickstart.UI
             // windows authentication needs special handling
             // since they don't support the redirect uri, 
             // so this URL is re-triggered when we call challenge
-            if (AccountOptions.WindowsAuthenticationSchemeName == provider)
-            {
-                // see if windows auth has already been requested and succeeded
-                var result = await HttpContext.AuthenticateAsync(AccountOptions.WindowsAuthenticationSchemeName);
-                if (result?.Principal is WindowsPrincipal wp)
-                {
-                    props.Items.Add("scheme", AccountOptions.WindowsAuthenticationSchemeName);
 
-                    var id = new ClaimsIdentity(provider);
-                    id.AddClaim(new Claim(JwtClaimTypes.Subject, wp.Identity.Name));
-                    id.AddClaim(new Claim(JwtClaimTypes.Name, wp.Identity.Name));
+            // This is Windows only code ... i ignore it at the moment
+            //if (AccountOptions.WindowsAuthenticationSchemeName == provider)
+            //{
+            //    // see if windows auth has already been requested and succeeded
+            //    var result = await HttpContext.AuthenticateAsync(AccountOptions.WindowsAuthenticationSchemeName);
+            //    if (result?.Principal is WindowsPrincipal wp)
+            //    {
+            //        props.Items.Add("scheme", AccountOptions.WindowsAuthenticationSchemeName);
 
-                    // add the groups as claims -- be careful if the number of groups is too large
-                    if (AccountOptions.IncludeWindowsGroups)
-                    {
-                        var wi = wp.Identity as WindowsIdentity;
-                        var groups = wi.Groups.Translate(typeof(NTAccount));
-                        var roles = groups.Select(x => new Claim(JwtClaimTypes.Role, x.Value));
-                        id.AddClaims(roles);
-                    }
+            //        var id = new ClaimsIdentity(provider);
+            //        id.AddClaim(new Claim(JwtClaimTypes.Subject, wp.Identity.Name));
+            //        id.AddClaim(new Claim(JwtClaimTypes.Name, wp.Identity.Name));
 
-                    await HttpContext.SignInAsync(
-                        IdentityServer4.IdentityServerConstants.ExternalCookieAuthenticationScheme,
-                        new ClaimsPrincipal(id),
-                        props);
-                    return Redirect(props.RedirectUri);
-                }
-                else
-                {
-                    // challenge/trigger windows auth
-                    return Challenge(AccountOptions.WindowsAuthenticationSchemeName);
-                }
-            }
-            else
+            //        // add the groups as claims -- be careful if the number of groups is too large
+            //        if (AccountOptions.IncludeWindowsGroups)
+            //        {
+            //            var wi = wp.Identity as WindowsIdentity;
+            //            var groups = wi.Groups.Translate(typeof(NTAccount));
+            //            var roles = groups.Select(x => new Claim(JwtClaimTypes.Role, x.Value));
+            //            id.AddClaims(roles);
+            //        }
+
+            //        await HttpContext.SignInAsync(
+            //            IdentityServer4.IdentityServerConstants.ExternalCookieAuthenticationScheme,
+            //            new ClaimsPrincipal(id),
+            //            props);
+            //        return Redirect(props.RedirectUri);
+            //    }
+            //    else
+            //    {
+            //        // challenge/trigger windows auth
+            //        return Challenge(AccountOptions.WindowsAuthenticationSchemeName);
+            //    }
+            //}
+            //else
             {
                 // start challenge and roundtrip the return URL
                 props.Items.Add("scheme", provider);

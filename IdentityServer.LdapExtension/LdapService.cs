@@ -55,14 +55,14 @@ namespace IdentityServer.LdapExtension
         {
             var searchResult = SearchUser(username, domain);
 
-            if (searchResult.Results.hasMore())
+            if (searchResult.Results.HasMore())
             {
                 try
                 {
-                    var user = searchResult.Results.next();
+                    var user = searchResult.Results.Next();
                     if (user != null)
                     {
-                        searchResult.LdapConnection.Bind(user.DN, password);
+                        searchResult.LdapConnection.Bind(user.Dn, password);
                         if (searchResult.LdapConnection.Bound)
                         {
                             //could change to ldap or change to configurable option
@@ -115,7 +115,7 @@ namespace IdentityServer.LdapExtension
 
             try
             {
-                var user = searchResult.Results.next();
+                var user = searchResult.Results.Next();
                 if (user != null)
                 {
                     //could change to ldap or change to configurable option
@@ -139,7 +139,7 @@ namespace IdentityServer.LdapExtension
             return default(TUser);
         }
 
-        private (LdapSearchResults Results, LdapConnection LdapConnection) SearchUser(string username, string domain)
+        private (ILdapSearchResults Results, LdapConnection LdapConnection) SearchUser(string username, string domain)
         {
             var allSearcheable = _config.Where(f => f.IsConcerned(username)).ToList();
             if (!string.IsNullOrEmpty(domain))
@@ -167,13 +167,13 @@ namespace IdentityServer.LdapExtension
                     var searchFilter = string.Format(matchConfig.SearchFilter, username);
                     var result = ldapConnection.Search(
                         matchConfig.SearchBase,
-                        LdapConnection.SCOPE_SUB,
+                        LdapConnection.ScopeSub,
                         searchFilter,
                         attributes,
                         false
                     );
 
-                    if (result.hasMore()) // Count is async (not waiting). The hasMore() always works.
+                    if (result.HasMore()) // Count is async (not waiting). The hasMore() always works.
                     {
                         return (Results: result, LdapConnection: ldapConnection);
                     }

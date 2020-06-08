@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace MvcClient
@@ -23,7 +24,7 @@ namespace MvcClient
                 {
                     options.SignInScheme = "Cookies";
 
-                    options.Authority = "http://localhost:5000";
+                    options.Authority = "https://localhost:5001";
                     options.RequireHttpsMetadata = false;
 
                     options.ResponseType = "code id_token";
@@ -37,7 +38,7 @@ namespace MvcClient
                 });
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -51,7 +52,11 @@ namespace MvcClient
             app.UseAuthentication();
 
             app.UseStaticFiles();
-            app.UseMvcWithDefaultRoute();
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(c => c.MapDefaultControllerRoute());
         }
     }
 }

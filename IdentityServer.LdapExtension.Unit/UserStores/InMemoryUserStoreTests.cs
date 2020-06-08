@@ -125,7 +125,7 @@ namespace IdentityServer.LdapExtension.Unit.UserStores
             ldapAttributeSet.Add(new LdapAttribute("givenName", "Test"));
             ldapAttributeSet.Add(new LdapAttribute("name", "testuser"));
             ldapAttributeSet.Add(new LdapAttribute("userPrincipalName", "testuser@example.com"));
-            ldapAttributeSet.Add(new LdapAttribute("sAMAccountName", "testuser"));
+            ldapAttributeSet.Add(new LdapAttribute("sAMAccountName", "testuser")); 
 
             var ldapEntry = new LdapEntry("cn=testuser,cn=users,dc=example,dc=com", ldapAttributeSet);
 
