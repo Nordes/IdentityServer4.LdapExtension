@@ -3,6 +3,7 @@ using IdentityServer.LdapExtension.UserModel;
 using Microsoft.Extensions.Logging;
 using Novell.Directory.Ldap;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace IdentityServer.LdapExtension
@@ -164,6 +165,18 @@ namespace IdentityServer.LdapExtension
                     ldapConnection.Connect(matchConfig.Url, matchConfig.FinalLdapConnectionPort);
                     ldapConnection.Bind(matchConfig.BindDn, matchConfig.BindCredentials);
                     var attributes = new TUser().LdapAttributes;
+
+                    var extrafieldList = new List<string>();
+
+                    
+                    if(matchConfig.ExtraAttributes != null)
+                    {
+                        extrafieldList.AddRange(matchConfig.ExtraAttributes);
+                    }
+                    
+
+                    attributes = attributes.Concat(extrafieldList).ToArray();
+
                     var searchFilter = string.Format(matchConfig.SearchFilter, username);
                     var result = ldapConnection.Search(
                         matchConfig.SearchBase,
