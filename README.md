@@ -56,7 +56,7 @@ services.AddIdentityServer()
 ### AppSettings Configuration
 The `appsettings.json` will require a configuration for the extension. Here's an example using OpenLdap:
 
-```json
+```javascript
 {
   "MyConfigurationSection": { // Name can be of your choosing
     "Url": "localhost",
@@ -85,7 +85,7 @@ By default the cache is using InMemory, but you can also use Redis. It needs to 
 
 #### Quick and Simple Example of a Configuration
 2 configurations using a `preFilterRegex` for discrimination.
-```json
+```javascript
   "IdentityServerLdap": {
     // Example: If you use a redis instead of in-memory (See Startup.cs)
     //"redis": "localhost:32771,ssl=false",
@@ -135,6 +135,7 @@ I plan to work on the following:
 * @marianahycit: Contribution
 * @uchetfield: Contribution (Issue #10)
 * @ttutko
+* @chrgraefe 
 
 ## License
 MIT
