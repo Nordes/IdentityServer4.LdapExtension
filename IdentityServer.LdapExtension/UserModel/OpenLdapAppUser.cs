@@ -60,7 +60,7 @@ namespace IdentityServer.LdapExtension.UserModel
             {
                 try
                 {
-                    var userRoles = user.getAttribute(OpenLdapAttributes.MemberOf.ToDescriptionString()).StringValues;
+                    var userRoles = user.GetAttribute(OpenLdapAttributes.MemberOf.ToDescriptionString()).StringValues;
                     while (userRoles.MoveNext())
                     {
                         this.Claims.Add(new Claim(JwtClaimTypes.Role, userRoles.Current.ToString()));
@@ -87,7 +87,7 @@ namespace IdentityServer.LdapExtension.UserModel
 
             try
             {
-                value = user.getAttribute(ldapAttribute.ToDescriptionString()).StringValue;
+                value = user.GetAttribute(ldapAttribute.ToDescriptionString()).StringValue;
                 return new Claim(claim, value);
             }
             catch (Exception)
@@ -101,8 +101,8 @@ namespace IdentityServer.LdapExtension.UserModel
 
         public void SetBaseDetails(LdapEntry ldapEntry, string providerName)
         {
-            DisplayName = ldapEntry.getAttribute(OpenLdapAttributes.DisplayName.ToDescriptionString()).StringValue;
-            Username = ldapEntry.getAttribute(OpenLdapAttributes.UserName.ToDescriptionString()).StringValue;
+            DisplayName = ldapEntry.GetAttribute(OpenLdapAttributes.DisplayName.ToDescriptionString()).StringValue;
+            Username = ldapEntry.GetAttribute(OpenLdapAttributes.UserName.ToDescriptionString()).StringValue;
             ProviderName = providerName;
             SubjectId = Username; // Extra: We could use the uidNumber instead in a sha algo.
             ProviderSubjectId = Username;
