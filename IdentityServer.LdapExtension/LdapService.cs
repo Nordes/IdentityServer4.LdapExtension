@@ -160,7 +160,7 @@ namespace IdentityServer.LdapExtension
             {
                 using(var ldapConnection = new LdapConnection {
                     SecureSocketLayer = matchConfig.Ssl
-                }) 
+                })
                 {
                     ldapConnection.Connect(matchConfig.Url, matchConfig.FinalLdapConnectionPort);
                     ldapConnection.Bind(matchConfig.BindDn, matchConfig.BindCredentials);
@@ -188,7 +188,7 @@ namespace IdentityServer.LdapExtension
 
                     if (result.HasMore()) // Count is async (not waiting). The hasMore() always works.
                     {
-                        return (Results: result, LdapConnection: ldapConnection);
+                        return (Results: result as LdapSearchResults, LdapConnection: ldapConnection);
                     }
                 }
             }
