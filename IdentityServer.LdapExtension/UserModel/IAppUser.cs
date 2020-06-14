@@ -22,12 +22,6 @@ namespace IdentityServer.LdapExtension.UserModel
         string[] LdapAttributes { get; }
 
         /// <summary>
-        /// Fill the user claims based on the ldapEntry
-        /// </summary>
-        /// <param name="ldapEntry">The LDAP entry.</param>
-        void FillClaims(LdapEntry ldapEntry);
-
-        /// <summary>
         /// This will set the base details such as:
         /// - DisplayName
         /// - Username
@@ -38,6 +32,6 @@ namespace IdentityServer.LdapExtension.UserModel
         /// </summary>
         /// <param name="ldapEntry">Ldap Entry</param>
         /// <param name="providerName">Specific provider such as Google, Facebook, etc.</param>
-        void SetBaseDetails(LdapEntry ldapEntry, string providerName);
+        void SetBaseDetails(LdapEntry ldapEntry, string providerName, IEnumerable<string> extraFields = null);
     }
 }
