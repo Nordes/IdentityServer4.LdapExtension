@@ -11,8 +11,7 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvcCore()
-                .AddAuthorization()
-                .AddJsonFormatters();
+                .AddAuthorization();
 
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(options =>
@@ -28,7 +27,7 @@ namespace Api
         {
             app.UseAuthentication();
 
-            app.UseMvc();
+            app.UseEndpoints(x => x.MapDefaultControllerRoute());
         }
     }
 }

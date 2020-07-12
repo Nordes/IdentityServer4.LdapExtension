@@ -5,6 +5,6 @@
     /// </summary>
     internal interface ILdapConnection: Novell.Directory.Ldap.ILdapConnection
     {
-        bool Bound { get; }
+      
     }
 }

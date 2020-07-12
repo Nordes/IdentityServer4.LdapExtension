@@ -4,6 +4,7 @@ using IdentityServer.LdapExtension.UserStore;
 using Moq;
 using Novell.Directory.Ldap;
 using System;
+using System.Linq;
 using Xunit;
 
 namespace IdentityServer.LdapExtension.Unit.UserStores
@@ -125,7 +126,7 @@ namespace IdentityServer.LdapExtension.Unit.UserStores
             ldapAttributeSet.Add(new LdapAttribute("givenName", "Test"));
             ldapAttributeSet.Add(new LdapAttribute("name", "testuser"));
             ldapAttributeSet.Add(new LdapAttribute("userPrincipalName", "testuser@example.com"));
-            ldapAttributeSet.Add(new LdapAttribute("sAMAccountName", "testuser"));
+            ldapAttributeSet.Add(new LdapAttribute("sAMAccountName", "testuser")); 
 
             var ldapEntry = new LdapEntry("cn=testuser,cn=users,dc=example,dc=com", ldapAttributeSet);
 
@@ -133,6 +134,29 @@ namespace IdentityServer.LdapExtension.Unit.UserStores
             appUser.SetBaseDetails(ldapEntry, "local");
 
             Assert.Null(appUser.DisplayName);
+        }
+
+        [Fact]
+        public void ActiveDirectoryAttributeWithExtrafield()
+        {
+            var ldapAttributeSet = new LdapAttributeSet();
+            ldapAttributeSet.Add(new LdapAttribute("distinguishedName", "cn=testuser,cn=users,dc=example,dc=com"));
+            ldapAttributeSet.Add(new LdapAttribute("cn", "testuser"));
+            ldapAttributeSet.Add(new LdapAttribute("givenName", "Test"));
+            ldapAttributeSet.Add(new LdapAttribute("name", "testuser"));
+            ldapAttributeSet.Add(new LdapAttribute("userPrincipalName", "testuser@example.com"));
+            ldapAttributeSet.Add(new LdapAttribute("sAMAccountName", "testuser"));
+            ldapAttributeSet.Add(new LdapAttribute("displayName", "TestUser"));
+            ldapAttributeSet.Add(new LdapAttribute("testfield", "extrafield"));
+
+            var ldapEntry = new LdapEntry("cn=testuser,cn=users,dc=example,dc=com", ldapAttributeSet);
+
+            var appUser = new ActiveDirectoryAppUser();
+            appUser.SetBaseDetails(ldapEntry, "local", new string[] { "testfield" });
+
+            Assert.NotNull(appUser.DisplayName);
+
+            Assert.Equal("extrafield", appUser.Claims.FirstOrDefault(x => x.Type.Equals("testfield"))?.Value);
         }
     }
 }

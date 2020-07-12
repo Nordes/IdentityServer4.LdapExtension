@@ -4,18 +4,19 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace QuickstartIdentityServer
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env, IConfiguration configuration)
+        public Startup(IWebHostEnvironment env, IConfiguration configuration)
         {
             Env = env;
             Configuration = configuration;
         }
 
-        private IHostingEnvironment Env { get; }
+        private IWebHostEnvironment Env { get; }
         private IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
@@ -41,7 +42,10 @@ namespace QuickstartIdentityServer
 
             app.UseIdentityServer();
             app.UseStaticFiles();
-            app.UseMvcWithDefaultRoute();
+            app.UseRouting();
+            app.UseAuthorization();
+
+            app.UseEndpoints(c => c.MapDefaultControllerRoute());
         }
     }
 }

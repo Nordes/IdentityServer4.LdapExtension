@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using IdentityModel;
 using IdentityServer.LdapExtension.Extensions;
@@ -42,7 +43,7 @@ namespace IdentityServer.LdapExtension.UserModel
         /// Fills the claims.
         /// </summary>
         /// <param name="user">The user.</param>
-        public void FillClaims(LdapEntry user)
+        private void FillClaims(LdapEntry user)
         {
             // Example in LDAP we have display name as displayName (normal field)
             //const string DisplayNameAttribute = "displayName";
@@ -76,6 +77,26 @@ namespace IdentityServer.LdapExtension.UserModel
                 catch (Exception)
                 {
                     // No roles exists it seems.
+                }
+            }
+        }
+
+        /// <summary>
+        /// Fills the extra claims
+        /// </summary>
+        /// <param name="ldapEntry"></param>
+        /// <param name="extrafields"></param>
+        private void FillExtrafields(LdapEntry user, IEnumerable<string> extrafields)
+        {
+            if (extrafields == null) return;
+
+            // with the AttributeSet we can check the check if the wanted fields exist
+            var keyset = user.GetAttributeSet(); 
+            foreach(var field in extrafields)
+            {
+                if (keyset.Keys.Contains(field))
+                {
+                    this.Claims.Add(new Claim(field, user.GetAttribute(field).StringValue));
                 }
             }
         }
@@ -127,7 +148,7 @@ namespace IdentityServer.LdapExtension.UserModel
         /// </summary>
         /// <param name="ldapEntry">Ldap Entry</param>
         /// <param name="providerName">Specific provider such as Google, Facebook, etc.</param>
-        public void SetBaseDetails(LdapEntry ldapEntry, string providerName)
+        public void SetBaseDetails(LdapEntry ldapEntry, string providerName, IEnumerable<string> extrafields = null)
         {
             DisplayName = ldapEntry.GetNullableAttribute(ActiveDirectoryLdapAttributes.DisplayName.ToDescriptionString())?.StringValue;
             Username = ldapEntry.GetAttribute(ActiveDirectoryLdapAttributes.UserName.ToDescriptionString()).StringValue;
@@ -135,6 +156,8 @@ namespace IdentityServer.LdapExtension.UserModel
             SubjectId = Username; // We could use the uidNumber instead in a sha algo.
             ProviderSubjectId = Username;
             FillClaims(ldapEntry);
+
+            FillExtrafields(ldapEntry, extrafields);
         }
     }
 }

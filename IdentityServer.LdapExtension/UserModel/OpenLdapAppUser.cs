@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using IdentityModel;
 using IdentityServer.LdapExtension.Extensions;
@@ -76,6 +77,25 @@ namespace IdentityServer.LdapExtension.UserModel
             }
         }
 
+        /// <summary>
+        /// Fills the extra claims
+        /// </summary>
+        /// <param name="ldapEntry"></param>
+        /// <param name="extrafields"></param>
+        private void FillExtrafields(LdapEntry user, IEnumerable<string> extrafields)
+        {
+            if (extrafields == null) return;
+
+            var keyset = user.GetAttributeSet();
+            foreach (var field in extrafields)
+            {
+                if (keyset.Keys.Contains(field))
+                {
+                    this.Claims.Add(new Claim(field, user.GetAttribute(field).StringValue));
+                }
+            }
+        }
+
         public static string[] RequestedLdapAttributes()
         {
             throw new NotImplementedException();
@@ -99,7 +119,7 @@ namespace IdentityServer.LdapExtension.UserModel
             return new Claim(claim, value);
         }
 
-        public void SetBaseDetails(LdapEntry ldapEntry, string providerName)
+        public void SetBaseDetails(LdapEntry ldapEntry, string providerName, IEnumerable<string> extraFields = null)
         {
             DisplayName = ldapEntry.GetAttribute(OpenLdapAttributes.DisplayName.ToDescriptionString()).StringValue;
             Username = ldapEntry.GetAttribute(OpenLdapAttributes.UserName.ToDescriptionString()).StringValue;
@@ -107,6 +127,8 @@ namespace IdentityServer.LdapExtension.UserModel
             SubjectId = Username; // Extra: We could use the uidNumber instead in a sha algo.
             ProviderSubjectId = Username;
             FillClaims(ldapEntry);
+
+            FillExtrafields(ldapEntry, extraFields);
         }
     }
 }
