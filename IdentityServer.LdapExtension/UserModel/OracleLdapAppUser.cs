@@ -120,7 +120,14 @@ namespace IdentityServer.LdapExtension.UserModel
         public void SetBaseDetails(LdapEntry ldapEntry, string providerName, IEnumerable<string> extraFields = null)
         {
             //Display name not required on oracle ldap
-            //DisplayName = ldapEntry.GetAttribute(OpenLdapAttributes.DisplayName.ToDescriptionString()).StringValue;
+            try
+            {
+                DisplayName = ldapEntry.GetAttribute(OpenLdapAttributes.DisplayName.ToDescriptionString()).StringValue;
+            }
+            catch
+            {
+                //ignored
+            }
             Username = ldapEntry.GetAttribute(OpenLdapAttributes.UserName.ToDescriptionString()).StringValue;
             ProviderName = providerName;
             SubjectId = Username; // Extra: We could use the uidNumber instead in a sha algo.
