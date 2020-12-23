@@ -13,7 +13,7 @@ namespace IdentityServer.LdapExtension.UserModel
     /// </summary>
     /// <seealso cref="IdentityServer.LdapExtension.UserModel.IAppUser" />
     /// <remarks>In the future, this might become a base class instead of inherithing from an interface.</remarks>
-    public class OpenLdapAppUser : IAppUser
+    public class OracleLdapAppUser : IAppUser
     {
         private string _subjectId;
 
@@ -43,7 +43,7 @@ namespace IdentityServer.LdapExtension.UserModel
         /// Fills the claims.
         /// </summary>
         /// <param name="user">The user.</param>
-        public void FillClaims(LdapEntry user)
+        private void FillClaims(LdapEntry user)
         {
             // Example in LDAP we have display name as displayName (normal field)
             this.Claims = new List<Claim>
@@ -119,7 +119,8 @@ namespace IdentityServer.LdapExtension.UserModel
 
         public void SetBaseDetails(LdapEntry ldapEntry, string providerName, IEnumerable<string> extraFields = null)
         {
-            DisplayName = ldapEntry.GetAttribute(OpenLdapAttributes.DisplayName.ToDescriptionString()).StringValue;
+            //Display name not required on oracle ldap
+            //DisplayName = ldapEntry.GetAttribute(OpenLdapAttributes.DisplayName.ToDescriptionString()).StringValue;
             Username = ldapEntry.GetAttribute(OpenLdapAttributes.UserName.ToDescriptionString()).StringValue;
             ProviderName = providerName;
             SubjectId = Username; // Extra: We could use the uidNumber instead in a sha algo.

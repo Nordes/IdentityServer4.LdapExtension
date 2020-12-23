@@ -32,6 +32,7 @@ namespace IdentityServer.LdapExtension.UserModel
         /// </summary>
         /// <param name="ldapEntry">Ldap Entry</param>
         /// <param name="providerName">Specific provider such as Google, Facebook, etc.</param>
+        /// <param name="extraFields">Ldap configuration extra fields</param>
         void SetBaseDetails(LdapEntry ldapEntry, string providerName, IEnumerable<string> extraFields = null);
     }
 }

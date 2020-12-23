@@ -1,7 +1,6 @@
 ﻿using IdentityModel;
 using IdentityServer.LdapExtension.Exceptions;
 using IdentityServer.LdapExtension.UserModel;
-using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;

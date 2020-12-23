@@ -6,26 +6,36 @@ namespace IdentityServer.LdapExtension.UserModel
 {
     public enum ActiveDirectoryLdapAttributes
     {
-        [Description("displayName")]
+        [Description("displayName")] 
         DisplayName,
-        [Description("givenName")]
+        
+        [Description("givenName")] 
         FirstName,
+        
         [Description("sn")] // Surname
         LastName,
-        [Description("description")]
+        
+        [Description("description")] 
         Description,
-        [Description("telephoneNumber")]
+        
+        [Description("telephoneNumber")] 
         TelephoneNumber,
+
         [Description("name")] // Also used as user name
         Name,
-        [Description("whenCreated")]
+        
+        [Description("whenCreated")] 
         CreatedOn,
-        [Description("whenChanged")]
+        
+        [Description("whenChanged")] 
         UpdatedOn,
-        [Description("sAMAccountName")]
+        
+        [Description("sAMAccountName")] 
         UserName,
-        [Description("mail")]
+        
+        [Description("mail")] 
         EMail,
+
         [Description("memberOf")] // Groups attribute that can appears multiple time
         MemberOf
     }
@@ -49,8 +59,17 @@ namespace IdentityServer.LdapExtension.UserModel
             List<string> result = new List<string>();
             foreach (var e in Enum.GetValues(typeof(T)))
             {
-                var fi = e.GetType().GetField(e.ToString());
-                var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+                var fieldName = e.ToString();
+
+                if (string.IsNullOrEmpty(fieldName))
+                    continue;
+
+                var field = e.GetType().GetField(fieldName);
+
+                if (field == null)
+                    continue;
+
+                var attributes = (DescriptionAttribute[]) field.GetCustomAttributes(typeof(DescriptionAttribute), false);
                 var description = attributes[0].Description;
                 if (!result.Contains(description))
                 {
@@ -63,8 +82,8 @@ namespace IdentityServer.LdapExtension.UserModel
 
         public static string ToDescriptionString(this ActiveDirectoryLdapAttributes val)
         {
-            DescriptionAttribute[] attributes = (DescriptionAttribute[])val.GetType().GetField(val.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), false);
-            return attributes.Length > 0 ? attributes[0].Description : string.Empty;
+            DescriptionAttribute[] attributes = (DescriptionAttribute[]) val.GetType().GetField(val.ToString())?.GetCustomAttributes(typeof(DescriptionAttribute), false);
+            return attributes != null && attributes.Length > 0 ? attributes[0].Description : string.Empty;
         }
     }
 }

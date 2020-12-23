@@ -24,7 +24,15 @@ namespace IdentityServer.LdapExtension.Extensions
                 List<string> result = new List<string>();
                 foreach (var e in Enum.GetValues(typeof(T)))
                 {
-                    var fi = e.GetType().GetField(e.ToString());
+                    var fieldName = e.ToString();
+                    if(string.IsNullOrEmpty(fieldName))
+                        continue;
+                    
+                    var fi = e.GetType().GetField(fieldName);
+                    
+                    if(fi == null)
+                        continue;
+                    
                     var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
                     var description = attributes[0].Description;
                     if (!result.Contains(description))

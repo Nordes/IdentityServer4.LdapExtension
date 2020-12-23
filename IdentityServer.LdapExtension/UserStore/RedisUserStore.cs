@@ -33,8 +33,6 @@ namespace IdentityServer.LdapExtension.UserStore
             Formatting = Formatting.Indented
         };
 
-        private TimeSpan _dataExpireIn;
-
         public RedisUserStore(
             ILdapService<TUser> authenticationService,
             ExtensionConfig ldapConfigurations,
@@ -62,8 +60,6 @@ namespace IdentityServer.LdapExtension.UserStore
             {
                 _logger.LogError($"LDAP {GetType().Name}: Not able to connect to redis :(");
             }
-
-            _dataExpireIn = TimeSpan.FromSeconds(config.RefreshClaimsInSeconds ?? (double)-1);
         }
 
         /// <summary>

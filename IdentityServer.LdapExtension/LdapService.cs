@@ -93,7 +93,6 @@ namespace IdentityServer.LdapExtension
         /// Finds user by username.
         /// </summary>
         /// <param name="username">The username.</param>
-        /// <param name="domain">The domain friendly name.</param>
         /// <returns>
         /// Returns the user when it exists.
         /// </returns>
@@ -148,7 +147,7 @@ namespace IdentityServer.LdapExtension
                 allSearcheable = allSearcheable.Where(e => e.FriendlyName.Equals(domain)).ToList();
             }
 
-            if (allSearcheable == null || allSearcheable.Count() == 0)
+            if (allSearcheable == null || allSearcheable.Count == 0)
             {
                 throw new LoginFailedException(
                     "Login failed.",
@@ -158,9 +157,7 @@ namespace IdentityServer.LdapExtension
             // Could become async
             foreach (var matchConfig in allSearcheable)
             {
-                using(var ldapConnection = new LdapConnection {
-                    SecureSocketLayer = matchConfig.Ssl
-                })
+                using(var ldapConnection = new LdapConnection {SecureSocketLayer = matchConfig.Ssl})
                 {
                     ldapConnection.Connect(matchConfig.Url, matchConfig.FinalLdapConnectionPort);
                     ldapConnection.Bind(matchConfig.BindDn, matchConfig.BindCredentials);

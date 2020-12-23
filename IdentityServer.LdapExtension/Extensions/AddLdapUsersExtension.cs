@@ -49,7 +49,6 @@ namespace IdentityServer.LdapExtension.Extensions
         /// <typeparam name="TCustomUserStore">The type of the custom user store.</typeparam>
         /// <param name="builder">The builder.</param>
         /// <param name="configuration">The ldap configuration.</param>
-        /// <param name="customUserStore">The custom user store (ILdapUserStore).</param>
         /// <returns>
         /// Returns the builder instance
         /// </returns>
