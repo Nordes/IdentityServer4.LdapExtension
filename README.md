@@ -46,7 +46,7 @@ services.AddIdentityServer()
 // ... Code ...
 ```
 
-**Application User:** `2` (`OpenLdapAppUser`, `ActiveDirectoryAppUser`) have been provided with this extension, but you can use your own as long as you implement the interface `IAppUser`. I encourrage you to provide your own implementation. You might want to have claims/roles based on an active directory group or your attributes within LDAP are not the one I have defined.
+**Application User:** `2` (`OpenLdapAppUser`, `ActiveDirectoryAppUser`) have been provided with this extension, but you can use your own as long as you implement the interface `IAppUser`. I encourage you to provide your own implementation. You might want to have claims/roles based on an active directory group or your attributes within LDAP are not the one I have defined.
 
 **Store types:**
 1. `UserStore.InMemory`: Can be used when you test locally. It stores the logged in user in memory in order to avoid querying the LDAP server over and over. It is also used in order to store the external logged in user details (Google, Facebook, etc.).
@@ -77,11 +77,11 @@ In the case you would have a need to have multiple configuration to either conne
 
 The usage of multiple configuration will bring some issues, so here's the rules:
 1. Configurations needs to be all the same type, except if you have a custom LDapUser and you're not using the one provided in this extension.
-2. Rules for `preFilterRegex` can discriminate in order to not try on all the LDAP server the credential/password for faillure. It also avoid having some kind of DoS on all your server in case of attack.
-3. If we have multiple LDAP configuration that are ok with the `preFilterRegex`, then the validation is done async (To be confirmed) and the first server to answer OK will be the one to use in order to get the information. The issue in that case is that it will try to call all your servers and that's probably not something you wish for.
+2. Rules for `preFilterRegex` can discriminate in order to not try on all the LDAP servers the credential/password for failure. It also avoid having some kind of DoS on all your servers in case of attack.
+3. If we have multiple LDAP configurations that are ok with the `preFilterRegex`, then the validation is done async (To be confirmed) and the first server to answer OK will be the one to use in order to get the information. The issue in that case is that it will try to call all your servers and that's probably not something you wish for.
 4. If it does not match anything, the extension will send back automatically a user not found.
 
-By default the cache is using InMemory, but you can also use Redis. It needs to be set in the global configuration when multiple Ldap entries. This avoid having custom code for each Ldap.
+By default the cache is using InMemory, but you can also use Redis. It needs to be set in the global configuration when multiple Ldap entries. This avoids having custom code for each Ldap.
 
 #### Quick and Simple Example of a Configuration
 2 configurations using a `preFilterRegex` for discrimination.
@@ -120,7 +120,7 @@ By default the cache is using InMemory, but you can also use Redis. It needs to 
 In startup, the same as a single configuration. Basically the configuration section and nothing more. If it's a single configuration, it will upgrade the single configuration to act like a multi-configuration. It is recommended from now on to use the multi-configuration style. It's easier to handle the Redis and other new features if any comes.
 
 ## You don't have an LDAP for your tests, use a OpenLdap docker image instead!
-It's not a big problem. I wrote a small tutorial/article in order to setup an entire OpenLdap server within Docker in order to not pollute your PC and also to avoid relying on network admnistrator. That way you can play with existing users or create your own users directory. The tutorial/article is available at [HoNoSoFt](https://blog.honosoft.com/2018/06/18/ldap-identity-server-series-%E3%83%BC-part-i-%E3%83%BC-openldap-on-docker-container/) website.
+It's not a big problem. I wrote a small tutorial/article in order to setup an entire OpenLdap server within Docker in order to not pollute your PC and also to avoid relying on network administrator. That way you can play with existing users or create your own users directory. The tutorial/article is available at [HoNoSoFt](https://blog.honosoft.com/2018/06/18/ldap-identity-server-series-%E3%83%BC-part-i-%E3%83%BC-openldap-on-docker-container/) website.
 
 ## Features in progress
 I plan to work on the following:
