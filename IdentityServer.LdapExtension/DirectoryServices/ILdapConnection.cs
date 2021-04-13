@@ -5,6 +5,5 @@
     /// </summary>
     internal interface ILdapConnection: Novell.Directory.Ldap.ILdapConnection
     {
-      
     }
 }

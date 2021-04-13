@@ -19,7 +19,9 @@ namespace IdentityServer.LdapExtension.Extensions
             get
             {
                 if (!typeof(T).IsEnum)
+                {
                     throw new ArgumentException("T must be an enumerated type");
+                }
 
                 List<string> result = new List<string>();
                 foreach (var e in Enum.GetValues(typeof(T)))
