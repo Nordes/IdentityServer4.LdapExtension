@@ -158,38 +158,33 @@ namespace IdentityServer.LdapExtension
             // Could become async
             foreach (var matchConfig in allSearcheable)
             {
-                using(var ldapConnection = new LdapConnection {
-                    SecureSocketLayer = matchConfig.Ssl
-                })
+                using var ldapConnection = new LdapConnection { SecureSocketLayer = matchConfig.Ssl };
+                ldapConnection.Connect(matchConfig.Url, matchConfig.FinalLdapConnectionPort);
+                ldapConnection.Bind(matchConfig.BindDn, matchConfig.BindCredentials);
+                
+                var attributes = new TUser().LdapAttributes;
+                var extrafieldList = new List<string>();
+
+                if (matchConfig.ExtraAttributes != null)
                 {
-                    ldapConnection.Connect(matchConfig.Url, matchConfig.FinalLdapConnectionPort);
-                    ldapConnection.Bind(matchConfig.BindDn, matchConfig.BindCredentials);
-                    var attributes = new TUser().LdapAttributes;
+                    extrafieldList.AddRange(matchConfig.ExtraAttributes);
+                }
 
-                    var extrafieldList = new List<string>();
 
-                    
-                    if(matchConfig.ExtraAttributes != null)
-                    {
-                        extrafieldList.AddRange(matchConfig.ExtraAttributes);
-                    }
-                    
+                attributes = attributes.Concat(extrafieldList).ToArray();
 
-                    attributes = attributes.Concat(extrafieldList).ToArray();
+                var searchFilter = string.Format(matchConfig.SearchFilter, username);
+                var result = ldapConnection.Search(
+                    matchConfig.SearchBase,
+                    LdapConnection.ScopeSub,
+                    searchFilter,
+                    attributes,
+                    false
+                );
 
-                    var searchFilter = string.Format(matchConfig.SearchFilter, username);
-                    var result = ldapConnection.Search(
-                        matchConfig.SearchBase,
-                        LdapConnection.ScopeSub,
-                        searchFilter,
-                        attributes,
-                        false
-                    );
-
-                    if (result.HasMore()) // Count is async (not waiting). The hasMore() always works.
-                    {
-                        return (Results: result as LdapSearchResults, LdapConnection: ldapConnection, matchConfig);
-                    }
+                if (result.HasMore()) // Count is async (not waiting). The hasMore() always works.
+                {
+                    return (Results: result as LdapSearchResults, LdapConnection: ldapConnection, matchConfig);
                 }
             }
 
