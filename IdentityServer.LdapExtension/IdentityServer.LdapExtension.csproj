@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
     <Authors>Nordès Ménard-Lamarre</Authors>
     <Version>2.1.14</Version>
     <Company>HoNoSoFt</Company>
