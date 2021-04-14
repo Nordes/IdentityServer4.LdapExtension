@@ -43,6 +43,11 @@ services.AddIdentityServer(/*...*/)
   .AddInMemoryApiResources(Resources.ApiResources)
   .AddSigningCredential()
   /*...*/
+  // [START of Usage of LDAP]
+  .AddLdapUsers<OpenLdapAppUser>(_config.GetSection("IdentityServerLdap"), UserStore.InMemory)
+  .AddProfileService<HostProfileService>() // Upgraded for LDAP (see code in project class for details).
+  // [END of usage of LDAP]
+
 ```
 
 **Application User:** `2` (`OpenLdapAppUser`, `ActiveDirectoryAppUser`) have been provided with this extension, but you can use your own as long as you implement the interface `IAppUser`. I encourrage you to provide your own implementation. You might want to have claims/roles based on an active directory group or your attributes within LDAP are not the one I have defined.
