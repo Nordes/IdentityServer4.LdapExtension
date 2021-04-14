@@ -28,6 +28,7 @@ Install-Package IdentityServer.LdapExtension
 > - Ldap Extension 2.0.0 goes with IdentityServer 2.2.x 
 > - Ldap Extension 2.1.7 goes with IdentityServer 2.3.x 
 > - Ldap Extension 2.1.8 goes with IdentityServer 2.4.x
+> - Ldap Extension 3.1.0 goes with IdentityServer 4.1.2
 
 ## Configuration for IdentityServer4 Server
 An easy extension method have been created in order to add the LDAP as a provider to your IdentityServer. For this you simply have to use the `AddLdapUsers<TApplicationUser>(LdapConfigSection, StoreTypeOrCustomStore)`. The configuration has to be provided or it won't work. The configuration is described [here](#appsettings-configuration).
