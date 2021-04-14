@@ -18,7 +18,7 @@
 IdentityServer4 Ldap Extension ([OpenLdap](https://www.openldap.org/) or [ActiveDirectory](https://en.wikipedia.org/wiki/Active_Directory)).
 
 ## Installation
-The plugin is easy to install to your solution. Built using **.Net Standard 2.0**. The Nuget package can be installed by either searching the package `IdentityServer.LdapExtension` or by typing the following command in your package console:
+The plugin is easy to install to your solution. Built using **.Net Core 3.1** and **.Net 5.0**. The Nuget package can be installed by either searching the package `IdentityServer.LdapExtension` or by typing the following command in your package console:
 
 ```csharp
 Install-Package IdentityServer.LdapExtension
