@@ -36,14 +36,13 @@ In the `Startup.cs` under `ConfigureServices` method, you will have something si
 
 ```csharp
 // ... Code ...
-services.AddIdentityServer()
-    .AddDeveloperSigningCredential()
-    //.AddSigningCredential(...)
-    .AddInMemoryIdentityResources(Config.GetIdentityResources())
-    .AddInMemoryApiResources(Config.GetApiResources())
-    .AddInMemoryClients(Config.GetClients())
-    .AddLdapUsers<OpenLdapAppUser>(Configuration.GetSection("MyConfigurationSection"), UserStore.InMemory);
-// ... Code ...
+services.AddIdentityServer(/*...*/)
+  .AddInMemoryClients(Config.GetClients())                  // [LDAP API Example]
+  .AddInMemoryIdentityResources(Config.IdentityResources()) // [LDAP API Example]
+  .AddInMemoryApiScopes(Config.GetApiScope())               // [LDAP API Example]
+  .AddInMemoryApiResources(Resources.ApiResources)
+  .AddSigningCredential()
+  /*...*/
 ```
 
 **Application User:** `2` (`OpenLdapAppUser`, `ActiveDirectoryAppUser`) have been provided with this extension, but you can use your own as long as you implement the interface `IAppUser`. I encourage you to provide your own implementation. You might want to have claims/roles based on an active directory group or your attributes within LDAP are not the one I have defined.
