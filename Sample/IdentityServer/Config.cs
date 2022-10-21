@@ -1,6 +1,6 @@
-﻿using IdentityServer4;
-using IdentityServer4.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Duende.IdentityServer;
+using Duende.IdentityServer.Models;
 
 namespace QuickstartIdentityServer412
 {

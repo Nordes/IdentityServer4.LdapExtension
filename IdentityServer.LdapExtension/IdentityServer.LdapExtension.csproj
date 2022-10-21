@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <Authors>Nordès Ménard-Lamarre</Authors>
     <Version>2.1.14</Version>
     <Company>HoNoSoFt</Company>
-    <Description>Extension for IdentityServer 4 in order to use LDAP as a plugin. It is also extensible enough in order to use custom LDAP schema such as OpenLdap or Active Directory.</Description>
+    <Description>Extension for Duende IdentityServer in order to use LDAP as a plugin. It is also extensible enough in order to use custom LDAP schema such as OpenLdap or Active Directory.</Description>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -16,17 +16,19 @@
     <PackageIconUrl>https://www.honosoft.com/img/logo.png</PackageIconUrl>
     <Copyright>Nordès Ménard-Lamarre</Copyright>
     <RepositoryUrl>https://github.com/Nordes/IdentityServer4.LdapExtension/</RepositoryUrl>
-    <PackageTags>IdentityServer4, Ldap, OpenLdap, ActiveDirectory</PackageTags>
+    <PackageTags>IdentityServer4, Ldap, OpenLdap, ActiveDirectory, Duende, IdentityServer</PackageTags>
     <IncludeSymbols>true</IncludeSymbols>
     <IncludeSource>true</IncludeSource>
     <NeutralLanguage />
+    <LangVersion>latest</LangVersion>
+    <PackageVersion>4.1.0</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IdentityModel" Version="5.1.0" />
-    <PackageReference Include="IdentityServer4" Version="4.1.2" />
+    <PackageReference Include="IdentityModel" Version="6.0.0" />
+    <PackageReference Include="Duende.IdentityServer" Version="6.1.7" />
     <PackageReference Include="Novell.Directory.Ldap.NETStandard" Version="3.6.0" />
-    <PackageReference Include="StackExchange.Redis" Version="2.2.4" />
+    <PackageReference Include="StackExchange.Redis" Version="2.6.70" />
   </ItemGroup>
 
 </Project>
