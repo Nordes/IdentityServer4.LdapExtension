@@ -1,14 +1,13 @@
-﻿using IdentityModel;
-using IdentityServer.LdapExtension.UserModel;
-using IdentityServer4.Stores.Serialization;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using StackExchange.Redis;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using IdentityModel;
+using IdentityServer.LdapExtension.UserModel;
+using Microsoft.Extensions.Logging;
+using StackExchange.Redis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace IdentityServer.LdapExtension.UserStore
 {
@@ -27,11 +26,6 @@ namespace IdentityServer.LdapExtension.UserStore
         private readonly ILdapService<TUser> _authenticationService;
         private readonly ILogger<RedisUserStore<TUser>> _logger;
         private IConnectionMultiplexer _redis;
-        private readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings
-        {
-            Converters = new List<JsonConverter> { new ClaimConverter() },
-            Formatting = Formatting.Indented
-        };
 
         private TimeSpan _dataExpireIn;
 
@@ -143,7 +137,7 @@ namespace IdentityServer.LdapExtension.UserStore
             if (result.HasValue)
             {
                 // IMPORTANT! This line might throw an exception if we change the format/version
-                IAppUser foundSubjectId = JsonConvert.DeserializeObject<TUser>(result.ToString(), _jsonSerializerSettings);
+                IAppUser foundSubjectId = JsonSerializer.Deserialize<TUser>(result.ToString());
 
                 return foundSubjectId;
             }
@@ -178,7 +172,7 @@ namespace IdentityServer.LdapExtension.UserStore
                 if (subject.HasValue)
                 {
                     // IMPORTANT! This line might throw an exception if we change the format/version
-                    IAppUser foundSubjectId = JsonConvert.DeserializeObject<TUser>(subject.ToString(), _jsonSerializerSettings);
+                    IAppUser foundSubjectId = JsonSerializer.Deserialize<TUser>(subject.ToString());
 
                     return foundSubjectId;
                 }
@@ -217,7 +211,7 @@ namespace IdentityServer.LdapExtension.UserStore
                 if (subject.HasValue)
                 {
                     // IMPORTANT! This line might throw an exception if we change the format/version
-                    IAppUser foundSubjectId = JsonConvert.DeserializeObject<TUser>(subject.ToString(), _jsonSerializerSettings);
+                    IAppUser foundSubjectId = JsonSerializer.Deserialize<TUser>(subject.ToString());
 
                     return foundSubjectId;
                 }
@@ -306,7 +300,7 @@ namespace IdentityServer.LdapExtension.UserStore
             const string keyByUsername = "IdentityServer/OpenId/username/{0}"; // <== contains a link to the SubjectId
             const string keyByProviderAndUserid = "IdentityServer/OpenId/provider/{0}/userId/{1}"; // <== contains a link to the SubjectId
 
-            var userStr = JsonConvert.SerializeObject(user, _jsonSerializerSettings);
+            var userStr = JsonSerializer.Serialize(user);
             var subjectIdStorageKey = string.Format(keyBySubjectId, user.SubjectId);
 
             // add user to Redis store

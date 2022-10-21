@@ -1,9 +1,9 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Duende.IdentityServer.Models;
 using IdentityServer.LdapExtension;
 using IdentityServer.LdapExtension.UserStore;
-using IdentityServer4.Models;
 using Microsoft.Extensions.Logging;
 
 namespace IdentityServerHost.Extensions

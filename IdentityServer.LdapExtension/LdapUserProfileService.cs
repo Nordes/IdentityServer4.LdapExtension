@@ -1,10 +1,10 @@
-﻿using IdentityServer.LdapExtension.UserStore;
-using IdentityServer4.Extensions;
-using IdentityServer4.Models;
-using IdentityServer4.Services;
-using Microsoft.Extensions.Logging;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer.LdapExtension.UserStore;
+using Microsoft.Extensions.Logging;
+using Duende.IdentityServer.Extensions;
+using Duende.IdentityServer.Models;
+using Duende.IdentityServer.Services;
 
 namespace IdentityServer.LdapExtension
 {
