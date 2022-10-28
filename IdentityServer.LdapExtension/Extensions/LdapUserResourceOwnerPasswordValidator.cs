@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Duende.IdentityServer.Validation;
 using IdentityModel;
-using IdentityServer4.Validation;
 using IdentityServer.LdapExtension.UserModel;
 using IdentityServer.LdapExtension.UserStore;
 using Microsoft.AspNetCore.Authentication;

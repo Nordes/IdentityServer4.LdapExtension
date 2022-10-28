@@ -2,9 +2,9 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/k26pepb32vka29w2/branch/master?svg=true)](https://ci.appveyor.com/project/Nordes/identityserver4-ldapextension/branch/master)
 [![NuGet](https://img.shields.io/nuget/v/IdentityServer.LdapExtension.svg)](https://www.nuget.org/packages/IdentityServer.LdapExtension/)
 
-- [IdentityServer4.LdapExtension](#identityserver4ldapextension)
+- [IdentityServer.LdapExtension](#identityserverldapextension)
   - [Installation](#installation)
-  - [Configuration for IdentityServer4 Server](#configuration-for-identityserver4-server)
+  - [Configuration for IdentityServer Server](#configuration-for-identityserver-server)
     - [AppSettings Configuration](#appsettings-configuration)
     - [Multiple concurent Ldap (For different DN, or totally different Ldap)](#multiple-concurent-ldap-for-different-dn-or-totally-different-ldap)
       - [Quick and Simple Example of a Configuration](#quick-and-simple-example-of-a-configuration)
@@ -14,11 +14,11 @@
     - [Special thanks to](#special-thanks-to)
   - [License](#license)
 
-# IdentityServer4.LdapExtension
-IdentityServer4 Ldap Extension ([OpenLdap](https://www.openldap.org/) or [ActiveDirectory](https://en.wikipedia.org/wiki/Active_Directory)).
+# IdentityServer.LdapExtension
+IdentityServer Ldap Extension ([OpenLdap](https://www.openldap.org/) or [ActiveDirectory](https://en.wikipedia.org/wiki/Active_Directory)).
 
 ## Installation
-The plugin is easy to install to your solution. Built using **.Net Core 3.1** and **.Net 5.0**. The Nuget package can be installed by either searching the package `IdentityServer.LdapExtension` or by typing the following command in your package console:
+The plugin is easy to install to your solution. Built using **.Net 6.0**. The Nuget package can be installed by either searching the package `IdentityServer.LdapExtension` or by typing the following command in your package console:
 
 ```csharp
 Install-Package IdentityServer.LdapExtension
@@ -29,8 +29,9 @@ Install-Package IdentityServer.LdapExtension
 > - Ldap Extension 2.1.7 goes with IdentityServer 2.3.x 
 > - Ldap Extension 2.1.8 goes with IdentityServer 2.4.x
 > - Ldap Extension 3.1.0 goes with IdentityServer 4.1.2
+> - Ldap Extension 4.1.0 goes with Duende IdentityServer 6.1.7
 
-## Configuration for IdentityServer4 Server
+## Configuration for IdentityServer Server
 An easy extension method have been created in order to add the LDAP as a provider to your IdentityServer. For this you simply have to use the `AddLdapUsers<TApplicationUser>(LdapConfigSection, StoreTypeOrCustomStore)`. The configuration has to be provided or it won't work. The configuration is described [here](#appsettings-configuration).
 
 In the `Startup.cs` under `ConfigureServices` method, you will have something similar to the following by default (Starter pack for IdentityServer). The last line is what you will need to add in order to get started.

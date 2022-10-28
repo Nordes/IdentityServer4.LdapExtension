@@ -1,8 +1,7 @@
-﻿using IdentityModel;
+﻿using System.Collections.Generic;
+using IdentityModel;
 using IdentityServer.LdapExtension.Exceptions;
 using IdentityServer.LdapExtension.UserModel;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;

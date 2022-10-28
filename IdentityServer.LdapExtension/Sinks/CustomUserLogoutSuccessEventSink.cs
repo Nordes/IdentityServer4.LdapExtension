@@ -1,9 +1,8 @@
-﻿using System.Threading.Tasks;
-using IdentityServer4.Events;
-using IdentityServer4.Services;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
+using Duende.IdentityServer.Events;
+using Duende.IdentityServer.Services;
 
 namespace IdentityServer.LdapExtension
 {
@@ -24,15 +23,7 @@ namespace IdentityServer.LdapExtension
         {
             if (evt == null) throw new ArgumentNullException(nameof(evt));
 
-            var json = JsonConvert.SerializeObject(evt);
-            _log.LogInformation(json);
-
-            return Task.CompletedTask;
-            // Not working at the moment. In the doc it says to register the DI, but it still not work.
-            _log.LogDebug(evt.EventType.ToString());
-            _log.LogDebug(evt.Id.ToString());
-            _log.LogDebug(evt.Name);
-            _log.LogDebug(evt.Message);
+            _log.LogInformation("Event details: {@Event}", evt);
 
             return Task.CompletedTask;
         }
